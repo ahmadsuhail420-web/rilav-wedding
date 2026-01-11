@@ -1,26 +1,26 @@
 /* ============================================
    WEDDING INVITATION - RIYA & LAVESH
    Mobile-first responsive design
-   Traditional Indian wedding color palette
+   Color theme from physical invitation
    ============================================ */
 
 /* ============================================
    CSS VARIABLES & RESET
    ============================================ */
 :root {
-    /* Invitation Color Palette */
-    --cream-bg: #FFF6EC;                 /* ivory paper */
-    --dark-green: #6B2A2A;               /* maroon ink */
-    --accent-pink: #F2A1B3;              /* lotus pink */
-    --gold: #C9A24D;                     /* antique gold */
-    --botanical-green: #5E7F5B;          /* muted leaf green */
-    --light-green: #8FAF8B;
+    /* Color Palette - Enhanced Vibrant Version */
+    --cream-bg: #FFF8F0;
+    --dark-green: #1B5E20;
+    --accent-pink: #FF6B9D;
+    --gold: #FFD700;
+    --botanical-green: #4CAF50;
+    --light-green: #81C784;
     --white: #FFFFFF;
-    --text-dark: #3A1F1F;                /* deep maroon */
-    --text-light: #6D4C4C;               /* soft maroon */
-    --rose-pink: #B23A48;                /* deep rose */
-    --peach: #F4A261;                    /* marigold */
-    --lavender: #E6C77A;                 /* soft gold */
+    --text-dark: #2C2C2C;
+    --text-light: #5D5D5D;
+    --rose-pink: #FF1744;
+    --peach: #FFB74D;
+    --lavender: #CE93D8;
     
     /* Fonts */
     --font-heading: 'Playfair Display', serif;
@@ -50,18 +50,19 @@ html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    padding: 0;
 }
 
 body {
     font-family: var(--font-body);
-    background: linear-gradient(
-        180deg,
-        #FFF6EC 0%,
-        #FFF1E4 100%
-    );
+    background: linear-gradient(135deg, #FFEBEE 0%, #F8BBD0 25%, #E1BEE7 50%, #D1C4E9 100%);
     color: var(--text-dark);
     overflow-x: hidden;
     min-height: 100vh;
+    position: relative;
+    margin: 0;
+    padding: 0;
 }
 
 /* ============================================
@@ -72,55 +73,85 @@ body {
     min-height: 100vh;
     position: relative;
     perspective: 2000px;
+    margin: 0;
+    padding: 0;
 }
 
 /* ============================================
-   CARD FRONT
+   CARD FRONT (CLOSED STATE)
    ============================================ */
 .card-front {
     position: fixed;
-    inset: 0;
-    background: radial-gradient(
-        circle at top,
-        #FFFDF8 0%,
-        #FFF3E6 50%,
-        #FFE8D6 100%
-    );
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(135deg, #FFEFD5 0%, #FFE4E1 25%, #E1BEE7 50%, #B2DFDB 75%, #C8E6C9 100%);
     z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: var(--transition-smooth);
-    box-shadow: 0 20px 60px rgba(107, 42, 42, 0.15);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
 }
 
 .card-front.opening {
     transform: rotateY(-90deg);
     opacity: 0;
     pointer-events: none;
+    visibility: hidden;
 }
 
 .card-cover-content {
     text-align: center;
     padding: var(--spacing-md);
     max-width: 500px;
+    position: relative;
+    animation: fadeInScale 1s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .floral-decoration {
+    width: 100%;
     height: 60px;
-    background-image:
+    background-image: 
         radial-gradient(circle, var(--accent-pink) 3px, transparent 3px),
         radial-gradient(circle, var(--gold) 2px, transparent 2px),
         radial-gradient(circle, var(--botanical-green) 2px, transparent 2px);
+    background-size: 40px 40px, 30px 30px, 20px 20px;
+    background-position: 0 0, 20px 20px, 10px 10px;
     opacity: 0.4;
     margin: var(--spacing-sm) 0;
+}
+
+.ganesh-symbol {
+    margin: var(--spacing-md) 0;
+}
+
+.ganesh-img {
+    width: 80px;
+    height: auto;
+    margin-bottom: var(--spacing-xs);
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .sanskrit-invocation {
     font-family: var(--font-sanskrit);
     font-size: 1.2rem;
     color: var(--dark-green);
+    font-weight: 500;
+    margin-top: var(--spacing-xs);
 }
 
 .couple-names-cover {
@@ -128,43 +159,107 @@ body {
     font-size: 3rem;
     color: var(--dark-green);
     margin: var(--spacing-md) 0;
+    font-weight: 600;
+    line-height: 1.2;
 }
 
 .ampersand {
-    color: var(--gold);
     font-style: italic;
+    color: var(--gold);
+    margin: 0 0.5rem;
+    font-size: 2.5rem;
 }
 
 .wedding-text {
+    font-size: 1.1rem;
     color: var(--text-light);
     letter-spacing: 2px;
     text-transform: uppercase;
+    margin-bottom: var(--spacing-lg);
+}
+
+.tap-instruction {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-lg);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+.tap-instruction p {
+    font-size: 1rem;
+    color: var(--gold);
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.tap-icon {
+    font-size: 1.5rem;
 }
 
 /* ============================================
-   CARD INSIDE
+   CARD INSIDE (OPENED STATE)
    ============================================ */
 .card-inside {
     display: none;
     opacity: 0;
+    width: 100%;
     background: var(--cream-bg);
+    margin: 0;
+    padding: 0;
 }
 
 .card-inside.visible {
     display: block;
-    animation: fadeInContent 1s ease forwards;
+    animation: fadeInContent 1s ease-out forwards;
+    animation-delay: 0.6s;
+}
+
+@keyframes fadeInContent {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ============================================
-   FLOATING MARIGOLD PETALS
+   FLOATING PETALS
    ============================================ */
 .petals-container {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
-    z-index: 999;
+    z-index: 9999;
+    overflow: visible;
 }
 
+.petal {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0.85;
+}
+
+/* Marigold flower petal shape - larger and more visible */
 .petal::before,
 .petal::after {
     content: '';
@@ -175,51 +270,355 @@ body {
 }
 
 .petal::before {
-    background: linear-gradient(
-        135deg,
-        #F4A261,
-        #E76F51
-    );
+    background: linear-gradient(135deg, #FF8C00 0%, #FFA500 100%);
+    transform: rotate(45deg);
+    box-shadow: 0 0 10px rgba(255, 140, 0, 0.7);
 }
 
 .petal::after {
-    background: linear-gradient(
-        135deg,
-        #E6C77A,
-        #F4A261
-    );
+    background: linear-gradient(135deg, #FFA500 0%, #FFB347 100%);
+    transform: rotate(-45deg);
+    box-shadow: 0 0 10px rgba(255, 165, 0, 0.7);
 }
 
+/* Different petal variations with wind effect - All start invisible */
+.petal {
+    visibility: hidden;
+}
+
+.petal-1 { 
+    left: 5%; 
+    animation: cherryFallWind1 18s ease-in-out infinite;
+    animation-delay: 0s;
+}
+.petal-2 { 
+    left: 15%; 
+    animation: cherryFallWind2 22s ease-in-out infinite;
+    animation-delay: 3s;
+}
+.petal-3 { 
+    left: 35%; 
+    animation: cherryFallWind3 20s ease-in-out infinite;
+    animation-delay: 7s;
+}
+.petal-4 { 
+    left: 55%; 
+    animation: cherryFallWind1 19s ease-in-out infinite;
+    animation-delay: 2s;
+}
+.petal-5 { 
+    left: 75%; 
+    animation: cherryFallWind2 21s ease-in-out infinite;
+    animation-delay: 5s;
+}
+.petal-6 { 
+    left: 90%; 
+    animation: cherryFallWind3 23s ease-in-out infinite;
+    animation-delay: 9s;
+}
+
+/* Marigold orange flowers - Deep Orange (most common) */
+.petal-1::before,
+.petal-4::before { background: linear-gradient(135deg, #FF8C00 0%, #FFA500 100%); }
+.petal-1::after,
+.petal-4::after { background: linear-gradient(135deg, #FFA500 0%, #FFB347 100%); }
+
+/* Bright Orange marigolds */
+.petal-2::before { background: linear-gradient(135deg, #FF6600 0%, #FF8C00 100%); }
+.petal-2::after { background: linear-gradient(135deg, #FF8C00 0%, #FFA500 100%); }
+
+/* Golden yellow marigolds */
+.petal-3::before,
+.petal-6::before { background: linear-gradient(135deg, #FFD700 0%, #FFED4E 100%); }
+.petal-3::after,
+.petal-6::after { background: linear-gradient(135deg, #FFED4E 0%, #FFF9A6 100%); }
+
+/* Reddish-orange marigolds */
+.petal-5::before { background: linear-gradient(135deg, #FF4500 0%, #FF6347 100%); }
+.petal-5::after { background: linear-gradient(135deg, #FF6347 0%, #FF8C69 100%); }
+
+/* Wind-driven falling animations - Start invisible above screen, fade in while falling */
+@keyframes cherryFallWind1 {
+    0% {
+        top: -15%;
+        transform: translateX(0) rotate(0deg);
+        opacity: 0;
+        visibility: hidden;
+    }
+    12% {
+        opacity: 0;
+        visibility: visible;
+    }
+    18% {
+        top: 5%;
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateX(100px) rotate(180deg);
+        opacity: 0.9;
+    }
+    75% {
+        transform: translateX(-50px) rotate(270deg);
+        opacity: 0.85;
+    }
+    92% {
+        opacity: 0.5;
+    }
+    100% {
+        top: 110%;
+        transform: translateX(30px) rotate(360deg);
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+@keyframes cherryFallWind2 {
+    0% {
+        top: -15%;
+        transform: translateX(0) rotate(0deg);
+        opacity: 0;
+        visibility: hidden;
+    }
+    12% {
+        opacity: 0;
+        visibility: visible;
+    }
+    18% {
+        top: 5%;
+        opacity: 0.8;
+    }
+    40% {
+        transform: translateX(-80px) rotate(150deg);
+        opacity: 0.9;
+    }
+    70% {
+        transform: translateX(60px) rotate(300deg);
+        opacity: 0.85;
+    }
+    92% {
+        opacity: 0.5;
+    }
+    100% {
+        top: 110%;
+        transform: translateX(-40px) rotate(450deg);
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+@keyframes cherryFallWind3 {
+    0% {
+        top: -15%;
+        transform: translateX(0) rotate(0deg);
+        opacity: 0;
+        visibility: hidden;
+    }
+    12% {
+        opacity: 0;
+        visibility: visible;
+    }
+    18% {
+        top: 5%;
+        opacity: 0.75;
+    }
+    30% {
+        transform: translateX(120px) rotate(120deg);
+        opacity: 0.85;
+    }
+    60% {
+        transform: translateX(-90px) rotate(240deg);
+        opacity: 0.9;
+    }
+    85% {
+        transform: translateX(50px) rotate(340deg);
+        opacity: 0.7;
+    }
+    92% {
+        opacity: 0.4;
+    }
+    100% {
+        top: 110%;
+        transform: translateX(10px) rotate(400deg);
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* Old fall animation removed - replaced with cherry blossom wind animations */
+
 /* ============================================
-   SECTIONS
+   SECTION BASE STYLES
    ============================================ */
 section {
     min-height: 100vh;
-    padding: var(--spacing-lg) var(--spacing-md);
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    padding: var(--spacing-lg) var(--spacing-md);
+    overflow: visible;
+    z-index: 1;
+    margin: 0;
+}
+
+section:last-child {
+    margin-bottom: 0;
+    padding-bottom: var(--spacing-lg);
+}
+
+/* Fix mobile scrolling issues */
+@media (max-width: 768px) {
+    section {
+        min-height: auto;
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+    
+    .hero-section {
+        min-height: 100vh;
+    }
+    
+    .blessing-section {
+        min-height: auto;
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+    
+    .details-section {
+        min-height: auto;
+    }
+    
+    .footer-section {
+        min-height: auto;
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+}
+
+/* Scroll reveal animation */
+section {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: var(--transition-smooth);
+}
+
+section.revealed {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* ============================================
    HERO SECTION
    ============================================ */
 .hero-section {
-    background: linear-gradient(
-        180deg,
-        #FFF6EC 0%,
-        #FFE9DC 100%
-    );
+    background: linear-gradient(135deg, #FFF0F5 0%, #FFE4E8 25%, #E8F5E9 50%, #FFF9C4 100%);
+}
+
+.couple-photo-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0.08;
+    filter: blur(2px);
+    z-index: 0;
+}
+
+/* Desktop adjustment - show more from top to avoid cropping head */
+@media (min-width: 769px) {
+    .couple-photo-bg {
+        background-position: 50% 35%;
+        background-attachment: fixed;
+    }
+}
+
+/* Keep mobile perfect as it is */
+@media (max-width: 768px) {
+    .couple-photo-bg {
+        background-position: center center;
+        background-size: cover;
+    }
+}
+
+.hero-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+}
+
+.ganesh-top {
+    margin-bottom: var(--spacing-md);
+}
+
+.ganesh-img-main {
+    width: 100px;
+    height: auto;
+    margin-bottom: var(--spacing-sm);
+    filter: drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.1));
+}
+
+.sanskrit-main {
+    font-family: var(--font-sanskrit);
+    font-size: 1.5rem;
+    color: var(--dark-green);
+    font-weight: 600;
+}
+
+.floral-border-top,
+.floral-border-bottom {
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: var(--spacing-md) auto;
+    position: relative;
+}
+
+.floral-border-top::after,
+.floral-border-bottom::after {
+    content: '✿';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--gold);
+    background: var(--cream-bg);
+    padding: 0 10px;
+    font-size: 1.2rem;
 }
 
 .couple-names-main {
     font-family: var(--font-heading);
     font-size: clamp(2.5rem, 8vw, 4rem);
     color: var(--dark-green);
+    margin: var(--spacing-lg) 0;
+    line-height: 1.3;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.bride-name,
+.groom-name {
+    display: block;
+    font-weight: 600;
 }
 
 .ampersand-fancy {
+    font-style: italic;
     color: var(--gold);
+    font-size: clamp(2rem, 6vw, 3rem);
+    margin: var(--spacing-sm) 0;
+}
+
+.wedding-announcement {
+    font-size: 1.3rem;
+    color: var(--text-light);
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: lowercase;
     font-style: italic;
 }
 
@@ -227,17 +626,141 @@ section {
    BLESSING SECTION
    ============================================ */
 .blessing-section {
-    background: linear-gradient(
-        135deg,
-        #FFF1E4,
-        #FFE9DC,
-        #FFF6EC
-    );
+    background: linear-gradient(135deg, #E1F5FE 0%, #F3E5F5 50%, #FFF9C4 100%);
+    flex-direction: column;
+    position: relative;
+}
+
+.bride-portrait {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 200px;
+    height: 280px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px;
+    box-shadow: 
+        0 15px 40px rgba(255, 140, 0, 0.3),
+        0 0 0 6px #FFF,
+        0 0 0 10px #FFD700;
+    z-index: 1;
+    opacity: 0.95;
+}
+
+@media (max-width: 768px) {
+    .bride-portrait {
+        display: none;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .bride-portrait {
+        width: 150px;
+        height: 210px;
+        right: 3%;
+    }
+}
+
+.couple-photo-frame {
+    margin-bottom: var(--spacing-lg);
+}
+
+.photo-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    border: 5px solid #FFB6C1;
+    box-shadow: 
+        0 10px 30px rgba(255, 182, 193, 0.4),
+        0 0 0 8px #FFF,
+        0 0 0 12px #FFB6C1,
+        0 0 0 16px #FFC0CB,
+        0 0 0 20px #FFD700;
+    position: relative;
+    margin: 0 auto;
+    animation: gentleGlow 3s ease-in-out infinite;
+}
+
+@keyframes gentleGlow {
+    0%, 100% {
+        box-shadow: 
+            0 10px 30px rgba(255, 182, 193, 0.4),
+            0 0 0 8px #FFF,
+            0 0 0 12px #FFB6C1,
+            0 0 0 16px #FFC0CB,
+            0 0 0 20px #FFD700;
+    }
+    50% {
+        box-shadow: 
+            0 10px 40px rgba(255, 215, 0, 0.5),
+            0 0 0 8px #FFF,
+            0 0 0 12px #FFD700,
+            0 0 0 16px #FFC0CB,
+            0 0 0 20px #FFB6C1;
+    }
+}
+
+@media (max-width: 768px) {
+    .photo-circle {
+        width: 180px;
+        height: 180px;
+        border: 4px solid #FFB6C1;
+        box-shadow: 
+            0 8px 25px rgba(255, 182, 193, 0.4),
+            0 0 0 6px #FFF,
+            0 0 0 10px #FFB6C1,
+            0 0 0 14px #FFC0CB,
+            0 0 0 18px #FFD700;
+    }
+}
+
+@media (max-width: 480px) {
+    .photo-circle {
+        width: 160px;
+        height: 160px;
+        border: 3px solid #FFB6C1;
+        box-shadow: 
+            0 6px 20px rgba(255, 182, 193, 0.4),
+            0 0 0 5px #FFF,
+            0 0 0 8px #FFB6C1,
+            0 0 0 11px #FFC0CB,
+            0 0 0 14px #FFD700;
+    }
+}
+
+.blessing-content {
+    text-align: center;
+    max-width: 700px;
+    padding: var(--spacing-md);
 }
 
 .sanskrit-shlok {
     font-family: var(--font-sanskrit);
+    font-size: 1.3rem;
     color: var(--dark-green);
+    line-height: 2;
+    margin-bottom: var(--spacing-lg);
+    font-weight: 500;
+}
+
+.shlok-line {
+    margin: var(--spacing-sm) 0;
+}
+
+.blessing-translation {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    font-style: italic;
+    line-height: 1.8;
+    padding: var(--spacing-md);
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    border-left: 3px solid var(--gold);
 }
 
 /* ============================================
@@ -245,66 +768,416 @@ section {
    ============================================ */
 .details-section {
     background: var(--cream-bg);
+    position: relative;
+    justify-content: flex-start;
+    padding-left: var(--spacing-xl);
+}
+
+.couple-photo-side {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 40%;
+    height: 100%;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    opacity: 0.08;
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+    will-change: transform;
+}
+
+@media (max-width: 768px) {
+    .couple-photo-side {
+        width: 50%;
+        opacity: 0.05;
+        background-position: center center;
+    }
+}
+
+.details-content {
+    max-width: 600px;
+    position: relative;
+    z-index: 2;
 }
 
 .section-heading {
     font-family: var(--font-heading);
+    font-size: 2.5rem;
     color: var(--dark-green);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    font-weight: 600;
 }
 
 .date-venue-card {
-    background: linear-gradient(
-        135deg,
-        #FFFDF8,
-        #FFF6EC
-    );
-    box-shadow: 0 10px 40px rgba(107, 42, 42, 0.15);
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFF9C4 100%);
+    border-radius: 20px;
+    padding: var(--spacing-lg);
+    box-shadow: 0 10px 40px rgba(255, 107, 157, 0.2);
+    margin-bottom: var(--spacing-lg);
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+}
+
+.date-venue-card::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(135deg, #FF6B9D, #FFD700, #4CAF50, #CE93D8);
+    border-radius: 20px;
+    z-index: -1;
+}
+
+.date-block {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--cream-bg);
+}
+
+.day-name {
+    font-size: 1.3rem;
+    color: var(--dark-green);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .date-number {
+    font-size: 4rem;
     font-family: var(--font-heading);
     color: var(--gold);
+    font-weight: 700;
+    line-height: 1;
+    margin: var(--spacing-xs) 0;
 }
 
-/* ============================================
-   VENUE
-   ============================================ */
+.month-year {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.events-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.event-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+    background: var(--cream-bg);
+    border-radius: 12px;
+    transition: var(--transition-fast);
+}
+
+.event-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.event-icon {
+    font-size: 2rem;
+    width: 50px;
+    text-align: center;
+}
+
+.event-details {
+    flex: 1;
+}
+
+.event-name {
+    font-size: 1.1rem;
+    color: var(--dark-green);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.event-time {
+    font-size: 1rem;
+    color: var(--gold);
+    font-weight: 500;
+}
+
 .venue-card {
-    background: linear-gradient(
-        135deg,
-        #9E2A2B,
-        #B23A48
-    );
+    background: linear-gradient(135deg, #FF6B9D 0%, #C2185B 50%, #7B1FA2 100%);
     color: white;
+    padding: var(--spacing-lg);
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(123, 31, 162, 0.4);
+}
+
+.venue-heading {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.venue-name {
+    font-size: 1.8rem;
+    font-family: var(--font-heading);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 700;
+}
+
+.venue-pin {
+    font-size: 1.3rem;
+    margin-right: 0.5rem;
+    display: inline-block;
+    animation: pinBounce 2s ease-in-out infinite;
+}
+
+@keyframes pinBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+.venue-link {
+    color: white;
+    text-decoration: none;
+    position: relative;
+    transition: var(--transition-fast);
+    cursor: pointer;
+}
+
+.venue-link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    transform: scale(1.02);
+    display: inline-block;
+}
+
+.venue-address {
+    font-size: 1rem;
+    opacity: 0.9;
+    line-height: 1.6;
 }
 
 /* ============================================
-   FOOTER
+   FOOTER SECTION
    ============================================ */
 .footer-section {
-    background: linear-gradient(
-        180deg,
-        #FFF1E4,
-        #FFE6DA
-    );
+    background: linear-gradient(135deg, #FFEBEE 0%, #F8BBD0 25%, #E1BEE7 50%, #D1C4E9 100%);
+    position: relative;
+    margin: 0;
+    padding-bottom: var(--spacing-lg);
+}
+
+.couple-photo-footer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: 50% 25%;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    opacity: 0.08;
+    filter: blur(3px);
+    z-index: 0;
+}
+
+@media (max-width: 768px) {
+    .couple-photo-footer {
+        background-position: 50% 30%;
+    }
+}
+
+.footer-content {
+    max-width: 600px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.blessing-message {
+    margin-bottom: var(--spacing-lg);
+}
+
+.heart-decoration {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
 }
 
 .blessing-text {
     font-family: var(--font-heading);
+    font-size: 1.5rem;
     color: var(--dark-green);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-sm);
+}
+
+.blessing-text-sub {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    font-style: italic;
+    margin-bottom: var(--spacing-lg);
 }
 
 .calendar-btn {
-    background: linear-gradient(
-        135deg,
-        #9E2A2B,
-        #B23A48
-    );
+    background: linear-gradient(135deg, #FF6B9D 0%, #FF1744 50%, #C2185B 100%);
     color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    font-family: var(--font-body);
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(255, 23, 68, 0.4);
+    transition: var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-lg);
+}
+
+.calendar-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(255, 23, 68, 0.6);
+    background: linear-gradient(135deg, #FF1744 0%, #C2185B 50%, #AD1457 100%);
+}
+
+.calendar-btn:active {
+    transform: translateY(0);
+}
+
+.calendar-icon {
+    font-size: 1.5rem;
+}
+
+.footer-quote {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+    border-top: 2px solid var(--botanical-green);
+}
+
+.footer-quote p {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    color: var(--text-light);
+    font-style: italic;
 }
 
 /* ============================================
-   ACCESSIBILITY
+   RESPONSIVE DESIGN - TABLET
+   ============================================ */
+@media (min-width: 768px) {
+    .couple-names-main {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .ampersand-fancy {
+        margin: 0 var(--spacing-md);
+    }
+    
+    .photo-circle {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .date-venue-card {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-lg);
+    }
+    
+    .date-block {
+        flex: 0 0 auto;
+        border-bottom: none;
+        border-right: 2px solid var(--cream-bg);
+        padding-right: var(--spacing-lg);
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .events-block {
+        flex: 1;
+    }
+    
+    .couple-photo-side {
+        width: 50%;
+    }
+    
+    .details-section {
+        justify-content: flex-start;
+        padding-left: 5rem;
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - DESKTOP
+   ============================================ */
+@media (min-width: 1024px) {
+    section {
+        padding: var(--spacing-xl) var(--spacing-lg);
+    }
+    
+    .card-cover-content {
+        max-width: 600px;
+    }
+    
+    .ganesh-img {
+        width: 100px;
+    }
+    
+    .couple-names-cover {
+        font-size: 4rem;
+    }
+    
+    .photo-circle {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .sanskrit-shlok {
+        font-size: 1.5rem;
+    }
+    
+    .details-content {
+        max-width: 800px;
+    }
+    
+    .footer-content {
+        max-width: 700px;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY & PRINT
    ============================================ */
 @media (prefers-reduced-motion: reduce) {
     * {
@@ -313,13 +1186,31 @@ section {
     }
 }
 
-/* ============================================
-   PRINT
-   ============================================ */
 @media print {
     .card-front,
     .petals-container,
     .calendar-btn {
         display: none;
     }
+    
+    .card-inside {
+        display: block !important;
+        opacity: 1 !important;
+    }
+    
+    section {
+        page-break-inside: avoid;
+        min-height: auto;
+    }
+}
+
+/* ============================================
+   LOADING STATE
+   ============================================ */
+body.loading {
+    overflow: hidden;
+}
+
+body.loading .card-front {
+    opacity: 1;
 }
