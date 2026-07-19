@@ -96,7 +96,7 @@
       rgba(253,248,240,.85) 88%, rgba(253,248,240,1) 100%);
   }
   .hero-overlay{
-    position:absolute; top:16%; left:0; right:0; z-index:3; text-align:center; padding:0 24px;
+    position:absolute; top:24%; left:0; right:0; z-index:3; text-align:center; padding:0 24px;
   }
   .hero-overlay .eyebrow{
     font-family:"Cinzel", serif; font-weight:500; font-size:clamp(11px,3vw,13px);
@@ -120,6 +120,38 @@
   .hero-overlay .names{
     font-family:"Cormorant Garamond", serif; font-style:italic; font-weight:600;
     color:#FAF0B7; line-height:1; font-size:clamp(54px,17vw,104px); margin:0;
+  }
+  .hero-blessing.in{ animation:nameRise 1100ms cubic-bezier(.22,.61,.36,1) 1.3s forwards; }
+
+  /* scroll gesture under the blessing */
+  .hero-cue{
+    margin-top:34px; display:flex; flex-direction:column; align-items:center; gap:10px;
+    opacity:0; transform:translateY(16px);
+  }
+  .hero-cue.in{ animation:nameRise 1100ms cubic-bezier(.22,.61,.36,1) 1.9s forwards; }
+  .hero-cue__mouse{
+    width:22px; height:36px; border:1.2px solid var(--gold-soft); border-radius:999px;
+    position:relative; opacity:.9;
+  }
+  .hero-cue__mouse::after{
+    content:""; position:absolute; left:50%; top:8px; width:2.5px; height:6px;
+    margin-left:-1.25px; border-radius:999px; background:var(--gold-soft);
+    animation:cueWheel 1.9s ease-in-out infinite;
+  }
+  @keyframes cueWheel{
+    0%{ transform:translateY(0); opacity:0; }
+    22%{ opacity:1; }
+    70%{ transform:translateY(12px); opacity:0; }
+    100%{ transform:translateY(12px); opacity:0; }
+  }
+  .hero-cue__label{
+    font-family:"Cinzel", serif; font-weight:500;
+    font-size:clamp(9px,2.5vw,10.5px); letter-spacing:.32em; text-transform:uppercase;
+    color:#FAF0B7; opacity:.8; text-shadow:0 1px 10px rgba(0,0,0,.5);
+  }
+  @media (prefers-reduced-motion:reduce){
+    .hero-cue{ opacity:1; transform:none; animation:none; }
+    .hero-cue__mouse::after{ animation:none; opacity:1; }
   }
 .hero-overlay .names .nm{ display:block; color:#FAF0B7; }
 .hero-overlay .names .amp{ display:block; font-size:.42em; color:#FAF0B7; margin:6px 0; }
@@ -1001,8 +1033,11 @@
         <span class="nm nm2" data-text="Zulfa">Zulfa</span>
       </h1>
       <p class="hero-blessing" id="heroBlessing">Two Souls, One Destiny<br>A Lifetime Written by Allah</p>
+      <div class="hero-cue" id="heroCue" aria-hidden="true">
+        <span class="hero-cue__mouse"></span>
+        <span class="hero-cue__label">Scroll</span>
+      </div>
     </div>
-    <div class="scrollcue" aria-hidden="true">Scroll<span class="line"></span></div>
   </section>
 
   <main class="content">
@@ -1345,6 +1380,8 @@
     if(weds) weds.classList.add('in');
     var bless = document.getElementById('heroBlessing');
     if(bless) bless.classList.add('in');
+    var cue = document.getElementById('heroCue');
+    if(cue) cue.classList.add('in');
   }, 200);
 
   // Let the invite's own cinematic auto-scroll handle everything.
@@ -1480,6 +1517,8 @@
     if(weds) setTimeout(function(){ weds.classList.add('in'); }, 150);
     var bless = document.getElementById('heroBlessing');
     if(bless) setTimeout(function(){ bless.classList.add('in'); }, 150);
+    var cue = document.getElementById('heroCue');
+    if(cue) setTimeout(function(){ cue.classList.add('in'); }, 150);
 
     setTimeout(function(){
       var toggle = document.getElementById('musicToggle');
