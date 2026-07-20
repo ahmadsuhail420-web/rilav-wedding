@@ -1842,7 +1842,7 @@
                                     var last = null, checkAt = 0, cssW = 0, cssH = 0;
 
                                     var img = new Image();
-                                    img.src = '/image/scratch-card.webp';
+                                    img.src = '/image/scratch-card.png';
 
                                     function paint() {
                                         var r = wrap.getBoundingClientRect();
@@ -2031,24 +2031,31 @@
                         transition: opacity 1.25s ease, transform 1.25s cubic-bezier(0.22, 0.61, 0.36, 1);
                     }
 
-                    #ssCountdown .ss-cd-eyebrow {
-                        font-family: 'Marcellus', Georgia, serif;
-                        font-size: 12px;
-                        letter-spacing: 0.3em;
-                        text-indent: 0.3em;
-                        text-transform: uppercase;
-                        color: #b09263;
-                        margin: 0 0 14px;
+                    #ssCountdown .ss-cd-title {
+                        margin: 0 0 6px;
+                        line-height: 1;
                     }
 
-                    #ssCountdown .ss-cd-title {
+                    #ssCountdown .ss-cd-l1 {
+                        display: block;
                         font-family: 'Cormorant Garamond', Georgia, serif;
+                        font-style: italic;
                         font-weight: 300;
-                        font-size: 38px;
-                        line-height: 1.25;
-                        letter-spacing: 0.02em;
+                        font-size: 27px;
+                        letter-spacing: 0.01em;
+                        color: #8a6b4f;
+                        margin-bottom: 8px;
+                    }
+
+                    #ssCountdown .ss-cd-l2 {
+                        display: block;
+                        font-family: 'Marcellus', Georgia, serif;
+                        font-weight: 400;
+                        font-size: 25px;
+                        letter-spacing: 0.2em;
+                        text-indent: 0.2em;
+                        text-transform: uppercase;
                         color: #a67d2b;
-                        margin: 0 0 10px;
                     }
 
                     #ssCountdown .ss-cd-orn {
@@ -2056,8 +2063,8 @@
                         align-items: center;
                         justify-content: center;
                         gap: 10px;
-                        margin: 0 auto 34px;
-                        max-width: 220px;
+                        margin: 18px auto 34px;
+                        max-width: 180px;
                     }
 
                     #ssCountdown .ss-cd-orn i {
@@ -2196,7 +2203,8 @@
 
                     @media screen and (max-width: 639px) {
                         #ssCountdown { padding: 50px 14px 56px; }
-                        #ssCountdown .ss-cd-title { font-size: 29px; }
+                        #ssCountdown .ss-cd-l1 { font-size: 21px; margin-bottom: 6px; }
+                        #ssCountdown .ss-cd-l2 { font-size: 18px; letter-spacing: 0.16em; text-indent: 0.16em; }
                         #countdownContainer { gap: 8px; }
                         .time-block { padding: 16px 2px 14px; border-radius: 2px; }
                         .number-wrap { height: 42px; }
@@ -2214,8 +2222,10 @@
                     }
                 </style>
                 <section id="ssCountdown" aria-hidden="true">
-                    <p class="ss-cd-eyebrow">The wait begins</p>
-                    <h2 class="ss-cd-title">Counting Down to Our Special Day</h2>
+                    <h2 class="ss-cd-title">
+                        <span class="ss-cd-l1">Counting down to</span>
+                        <span class="ss-cd-l2">Our Special Day</span>
+                    </h2>
                     <div class="ss-cd-orn" aria-hidden="true"><i></i><span></span><i></i></div>
                     <div id="countdownContainer">
                         <div class="time-block" id="tb-days">
