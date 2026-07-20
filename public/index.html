@@ -1020,8 +1020,26 @@
                             100% { transform: translate3d(var(--dx),125vh,0) rotate(var(--rot)); opacity: 0; }
                         }
 
+                        /* ---- marigold garland, sits at the foot of this section ---- */
+                        #ssSaveDate .ss-sd-garland {
+                            display: block;
+                            width: calc(100% + 40px);
+                            margin: 54px -20px -68px;
+                            padding: 0;
+                            line-height: 0;
+                            pointer-events: none;
+                        }
+
+                        #ssSaveDate .ss-sd-garland img {
+                            display: block;
+                            width: 100%;
+                            height: auto;
+                            max-width: none;
+                        }
+
                         @media screen and (max-width: 479px) {
                             #ssSaveDate { padding: 44px 16px 54px; }
+                            #ssSaveDate .ss-sd-garland { width: calc(100% + 32px); margin: 38px -16px -54px; }
                             #ssSaveDate .ss-sd-title { font-size: 27px; }
                             #ssScratchWrap .ss-sd-num { font-size: 74px; }
                             #ssScratchWrap .ss-sd-full { font-size: 30px; letter-spacing: 0.12em; }
@@ -1048,6 +1066,9 @@
                         <div id="ssScratchHint">Scratch to reveal</div>
                     </div>
                     <button type="button" id="ssRevealBtn">Reveal the date</button>
+                    <div class="ss-sd-garland" aria-hidden="true">
+                        <img src="/image/garland.webp" alt=""/>
+                    </div>
                 </div>
                 <script>
                     (function() {
@@ -1577,93 +1598,6 @@
                             }
                         })();
                     </script>
-        <script>
-            (function() {
-                                var eventDate = new Date(2026, 11, 8, 16, 0, 0);
-                                var root = document.getElementById('ssCountdown');
-                                var container = document.getElementById('countdownContainer');
-                                var elDays = document.getElementById('days');
-                                var elHours = document.getElementById('hours');
-                                var elMins = document.getElementById('minutes');
-                                var elSecs = document.getElementById('seconds');
-                                if (!root || !elDays) return;
-
-                                var prev = { days: null, hours: null, minutes: null, seconds: null };
-                                var revealed = false, live = false, timer = null;
-
-                                function flip(el, newVal) {
-                                    if (el.textContent === newVal) return;
-                                    if (!live) { el.textContent = newVal; return; }
-                                    el.classList.add('flip-out');
-                                    setTimeout(function() {
-                                        el.classList.remove('flip-out');
-                                        el.classList.add('flip-in');
-                                        el.textContent = newVal;
-                                        el.offsetHeight;
-                                        el.classList.remove('flip-in');
-                                    }, 520);
-                                }
-
-                                function tick() {
-                                    var dist = eventDate - new Date();
-                                    if (dist < 0) {
-                                        container.innerHTML = '<p class="ss-cd-foot" style="opacity:0.9">See you there!</p>';
-                                        if (timer) clearInterval(timer);
-                                        return;
-                                    }
-                                    var d = String(Math.floor(dist / 86400000));
-                                    var h = String(Math.floor((dist % 86400000) / 3600000)).padStart(2, '0');
-                                    var m = String(Math.floor((dist % 3600000) / 60000)).padStart(2, '0');
-                                    var s = String(Math.floor((dist % 60000) / 1000)).padStart(2, '0');
-                                    if (d !== prev.days)    { flip(elDays, d);  prev.days = d; }
-                                    if (h !== prev.hours)   { flip(elHours, h); prev.hours = h; }
-                                    if (m !== prev.minutes) { flip(elMins, m);  prev.minutes = m; }
-                                    if (s !== prev.seconds) { flip(elSecs, s);  prev.seconds = s; }
-                                }
-
-                                function doReveal() {
-                                    if (revealed) return;
-                                    revealed = true;
-                                    root.querySelectorAll('.number, .label').forEach(function(el) {
-                                        el.classList.add('revealed');
-                                    });
-                                }
-
-                                /* the section only exists on the page once the date has been scratched open */
-                                function goLive() {
-                                    if (live) return;
-                                    live = true;
-                                    tick();
-                                    root.setAttribute('aria-hidden', 'false');
-                                    root.classList.add('ss-cd-mounted');
-                                    root.offsetHeight; /* force layout so the fade-up plays */
-                                    requestAnimationFrame(function() {
-                                        root.classList.add('ss-cd-live');
-                                        doReveal();
-                                    });
-                                    timer = setInterval(tick, 1000);
-                                }
-
-                                var saveDate = document.getElementById('ssSaveDate');
-
-                                function dateIsOut() {
-                                    if (window.ssDateRevealed) return true;
-                                    return !!(saveDate && saveDate.classList.contains('ss-revealed'));
-                                }
-
-                                if (!saveDate) {
-                                    goLive();
-                                } else if (dateIsOut()) {
-                                    goLive();
-                                } else {
-                                    document.addEventListener('ss:date-revealed', goLive);
-                                    var poll = setInterval(function() {
-                                        if (dateIsOut()) { clearInterval(poll); goLive(); }
-                                    }, 400);
-                                }
-                            })();
-        </script>
-
         <!-- full-screen flower shower layer (fires once, on date reveal) -->
         <div id="ssPetals" aria-hidden="true"></div>
 
