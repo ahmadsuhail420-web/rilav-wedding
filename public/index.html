@@ -247,7 +247,7 @@
 
             /* --- "The wedding of" (elem 1782600100000001) --- */
             #ssHero .ss-hero-kicker {
-                top: 74px;
+                top: 34px;
                 left: calc(50% - 600px + 320px);
                 width: 560px;
                 height: auto;
@@ -267,7 +267,7 @@
 
             /* --- names (elem 1763402147625) --- */
             #ssHero .ss-hero-names {
-                top: 118px;
+                top: 78px;
                 left: calc(50% - 600px + 320px);
                 width: 560px;
                 height: auto;
@@ -291,7 +291,7 @@
 
             /* --- "weds" (elem 176340390975774690) --- */
             #ssHero .ss-hero-weds {
-                top: 180px;
+                top: 140px;
                 left: calc(50% - 600px + 320px);
                 width: 560px;
                 height: auto;
@@ -353,7 +353,7 @@
 
             /* --- scroll cue label (elem 1782235970225000002) --- */
             #ssHero .ss-scroll-label {
-                top: 604px;
+                top: 564px;
                 left: calc(50% - 600px + 442px);
                 width: 316px;
                 height: auto;
@@ -373,7 +373,7 @@
 
             /* --- scroll cue vector (elem 1782235970224000001) --- */
             #ssHero .ss-scroll-vector {
-                top: 632px;
+                top: 592px;
                 left: calc(50% - 600px + 578px);
                 width: 44px;
                 height: auto;
@@ -492,8 +492,8 @@
                 #ssHero .ss-hero-kicker   { left: calc(50% - 480px + 200px); }
                 #ssHero .ss-hero-names    { left: calc(50% - 480px + 200px); }
                 #ssHero .ss-hero-weds     { left: calc(50% - 480px + 200px); }
-                #ssHero .ss-scroll-label  { top: 324px; left: calc(50% - 480px + 322px); }
-                #ssHero .ss-scroll-vector { top: 352px; left: calc(50% - 480px + 458px); }
+                #ssHero .ss-scroll-label  { top: 284px; left: calc(50% - 480px + 322px); }
+                #ssHero .ss-scroll-vector { top: 312px; left: calc(50% - 480px + 458px); }
                 #ssHero .ss-hero-quote    { top: 838px; left: calc(50% - 480px + 200px); }
                 #ssHero .ss-hero-invite   { left: calc(50% - 480px + 327px); }
             }
@@ -504,8 +504,8 @@
                 #ssHero .ss-hero-kicker   { left: calc(50% - 320px + 40px); }
                 #ssHero .ss-hero-names    { left: calc(50% - 320px + 40px); }
                 #ssHero .ss-hero-weds     { left: calc(50% - 320px + 40px); }
-                #ssHero .ss-scroll-label  { top: 324px; left: calc(50% - 320px + 162px); }
-                #ssHero .ss-scroll-vector { top: 352px; left: calc(50% - 320px + 298px); }
+                #ssHero .ss-scroll-label  { top: 284px; left: calc(50% - 320px + 162px); }
+                #ssHero .ss-scroll-vector { top: 312px; left: calc(50% - 320px + 298px); }
                 #ssHero .ss-hero-quote    { top: 838px; left: calc(50% - 320px + 40px); }
                 #ssHero .ss-hero-invite   { top: 1060px; left: calc(50% - 320px + 167px); }
             }
@@ -516,8 +516,8 @@
                 #ssHero .ss-hero-kicker   { left: calc(50% - 240px + -40px); }
                 #ssHero .ss-hero-names    { left: calc(50% - 240px + -40px); }
                 #ssHero .ss-hero-weds     { left: calc(50% - 240px + -40px); }
-                #ssHero .ss-scroll-label  { top: 324px; left: calc(50% - 240px + 82px); }
-                #ssHero .ss-scroll-vector { top: 352px; left: calc(50% - 240px + 218px); }
+                #ssHero .ss-scroll-label  { top: 284px; left: calc(50% - 240px + 82px); }
+                #ssHero .ss-scroll-vector { top: 312px; left: calc(50% - 240px + 218px); }
                 #ssHero .ss-hero-quote    { top: 838px; left: calc(50% - 240px + -40px); }
                 #ssHero .ss-hero-invite   { top: 1060px; left: calc(50% - 240px + 87px); }
             }
@@ -529,8 +529,8 @@
                 #ssHero .ss-hero-kicker   { left: calc(50% - 160px + -120px); width: 560px; }
                 #ssHero .ss-hero-names    { left: calc(50% - 160px + -120px); }
                 #ssHero .ss-hero-weds     { left: calc(50% - 160px + -120px); }
-                #ssHero .ss-scroll-label  { top: 326px; left: calc(50% - 160px + 2px); }
-                #ssHero .ss-scroll-vector { top: 354px; left: calc(50% - 160px + 138px); }
+                #ssHero .ss-scroll-label  { top: 286px; left: calc(50% - 160px + 2px); }
+                #ssHero .ss-scroll-vector { top: 314px; left: calc(50% - 160px + 138px); }
                 #ssHero .ss-hero-quote    { top: 838px; left: calc(50% - 160px + -120px); width: 560px; }
                 #ssHero .ss-hero-invite   { top: 1050px; left: calc(50% - 160px + 7px); }
                 #ssHero .ss-quote-sub     { margin-top: 14px; font-size: 22px; }
@@ -666,7 +666,7 @@
         <!-- ==================== HERO ==================== -->
         <section id="ssHero">
             <div class="ss-el ss-hero-video">
-                <video autoplay muted loop playsinline>
+                <video id="ssHeroVideo" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback>
                     <source src="/video/hero-bg.mp4" type="video/mp4">Your browser does not support the video tag.
                 </video>
             </div>
@@ -720,6 +720,45 @@
         </section>
 
         <script>
+            /* keep the hero video playing at all times — browsers pause muted
+               autoplay video on tab switch, after the welcome sequence, on
+               low-power mode prompts, and when a media session takes over */
+            (function() {
+                var v = document.getElementById('ssHeroVideo');
+                if (!v) return;
+
+                function kick() {
+                    if (!v.paused && !v.ended) return;
+                    v.muted = true;
+                    v.defaultMuted = true;
+                    var p = v.play();
+                    if (p && p.catch) p.catch(function() {});
+                }
+
+                v.addEventListener('loadedmetadata', kick);
+                v.addEventListener('canplay', kick);
+                v.addEventListener('pause', kick);
+                v.addEventListener('stalled', kick);
+                v.addEventListener('suspend', kick);
+                v.addEventListener('ended', kick);
+
+                document.addEventListener('visibilitychange', function() {
+                    if (!document.hidden) kick();
+                });
+                window.addEventListener('pageshow', kick);
+                window.addEventListener('focus', kick);
+
+                /* the first real gesture unblocks playback where autoplay was refused */
+                ['click', 'touchstart', 'keydown'].forEach(function(evt) {
+                    document.addEventListener(evt, kick, { passive: true });
+                });
+
+                /* the welcome overlay covers the page at load; nudge again once it clears */
+                document.addEventListener('ss:date-revealed', kick);
+                setInterval(kick, 2000);
+                kick();
+            })();
+
             /* replaces tilda-animation-2.0's scroll-triggered "fadein" */
             (function() {
                 var targets = document.querySelectorAll('#ssHero .ss-fadein');
@@ -960,7 +999,7 @@
                             overflow: hidden;
                             z-index: 2147483000;
                             display: none;
-                            contain: strict;
+                            contain: layout paint;
                         }
 
                         #ssPetals.ss-petals-on {
@@ -1015,7 +1054,21 @@
                         var section = document.getElementById('ssSaveDate');
                         var wrap = document.getElementById('ssScratchWrap');
                         var canvas = document.getElementById('ssScratchCanvas');
-                        var petals = document.getElementById('ssPetals');
+                        var petals = null;
+
+                        /* the shower layer is the last node in <body>, i.e. after this
+                           script — so resolve it lazily, at reveal time. */
+                        function petalLayer() {
+                            if (petals && petals.isConnected) return petals;
+                            petals = document.getElementById('ssPetals');
+                            if (!petals) {
+                                petals = document.createElement('div');
+                                petals.id = 'ssPetals';
+                                petals.setAttribute('aria-hidden', 'true');
+                                document.body.appendChild(petals);
+                            }
+                            return petals;
+                        }
                         var btn = document.getElementById('ssRevealBtn');
                         if (!section || !canvas) return;
 
@@ -1150,13 +1203,13 @@
                         }
 
                         function shower() {
-                            if (!petals) return;
                             if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                            var layer = petalLayer();
                             var count = window.innerWidth < 600 ? 26 : 40;
                             var longest = 0;
 
                             /* reveal the full-screen layer only now, and only once */
-                            petals.classList.add('ss-petals-on');
+                            layer.classList.add('ss-petals-on');
                             for (var i = 0; i < count; i++) {
                                 (function(i) {
                                     setTimeout(function() {
@@ -1169,7 +1222,7 @@
                                         f.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
                                         var dur = 4.2 + Math.random() * 3.4;
                                         f.style.animationDuration = dur + 's';
-                                        petals.appendChild(f);
+                                        layer.appendChild(f);
                                         setTimeout(function() {
                                             if (f.parentNode) f.parentNode.removeChild(f);
                                         }, dur * 1000 + 400);
@@ -1180,8 +1233,8 @@
 
                             /* take the layer back out of the page once the last flower has landed */
                             setTimeout(function() {
-                                petals.classList.remove('ss-petals-on');
-                                petals.innerHTML = '';
+                                layer.classList.remove('ss-petals-on');
+                                layer.innerHTML = '';
                             }, longest + 600);
                         }
                     })();
