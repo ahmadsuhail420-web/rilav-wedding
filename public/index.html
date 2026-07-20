@@ -952,18 +952,24 @@
                         #ssSaveDate.ss-offer-skip #ssRevealBtn { display: block; }
                         #ssSaveDate.ss-revealed #ssRevealBtn { display: none; }
 
-                        /* ---- chrysanthemum shower ---- */
+                        /* ---- chrysanthemum shower: full-screen, above everything ---- */
                         #ssPetals {
-                            position: absolute;
+                            position: fixed;
                             inset: 0;
                             pointer-events: none;
                             overflow: hidden;
-                            z-index: 5;
+                            z-index: 2147483000;
+                            display: none;
+                            contain: strict;
+                        }
+
+                        #ssPetals.ss-petals-on {
+                            display: block;
                         }
 
                         #ssPetals span {
                             position: absolute;
-                            top: -8%;
+                            top: -10vh;
                             will-change: transform, opacity;
                             animation: ssPetalFall linear forwards;
                         }
@@ -972,7 +978,7 @@
                             0%   { transform: translate3d(0,0,0) rotate(0deg);        opacity: 0; }
                             12%  { opacity: 1; }
                             85%  { opacity: 1; }
-                            100% { transform: translate3d(var(--dx),115vh,0) rotate(var(--rot)); opacity: 0; }
+                            100% { transform: translate3d(var(--dx),125vh,0) rotate(var(--rot)); opacity: 0; }
                         }
 
                         @media screen and (max-width: 479px) {
@@ -991,7 +997,6 @@
                         }
         </style>
         <div id="ssSaveDate">
-                    <div id="ssPetals" aria-hidden="true"></div>
                     <p class="ss-sd-eyebrow">Mark your calendar</p>
                     <h2 class="ss-sd-title">Save the Date</h2>
                     <div id="ssScratchWrap">
@@ -1145,8 +1150,13 @@
                         }
 
                         function shower() {
+                            if (!petals) return;
                             if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
                             var count = window.innerWidth < 600 ? 26 : 40;
+                            var longest = 0;
+
+                            /* reveal the full-screen layer only now, and only once */
+                            petals.classList.add('ss-petals-on');
                             for (var i = 0; i < count; i++) {
                                 (function(i) {
                                     setTimeout(function() {
@@ -1164,176 +1174,18 @@
                                             if (f.parentNode) f.parentNode.removeChild(f);
                                         }, dur * 1000 + 400);
                                     }, i * 90);
+                                    longest = Math.max(longest, i * 90 + 8000);
                                 })(i);
                             }
+
+                            /* take the layer back out of the page once the last flower has landed */
+                            setTimeout(function() {
+                                petals.classList.remove('ss-petals-on');
+                                petals.innerHTML = '';
+                            }, longest + 600);
                         }
                     })();
                 </script>
-        <script>
-            (function() {
-                            var section = document.getElementById('ssSaveDate');
-                            var wrap = document.getElementById('ssScratchWrap');
-                            var canvas = document.getElementById('ssScratchCanvas');
-                            var petals = document.getElementById('ssPetals');
-                            var btn = document.getElementById('ssRevealBtn');
-                            if (!section || !canvas) return;
-
-                            var ctx = canvas.getContext('2d', { willReadFrequently: true });
-                            var THRESHOLD = 0.80;
-                            var BRUSH = 30;
-                            var revealed = false, started = false, drawing = false;
-                            var last = null, checkAt = 0, cssW = 0, cssH = 0;
-
-                            var img = new Image();
-                            img.src = '/image/scratch-card.webp';
-
-                            function paint() {
-                                var r = wrap.getBoundingClientRect();
-                                if (!r.width) return;
-                                var dpr = Math.min(window.devicePixelRatio || 1, 2);
-                                cssW = r.width; cssH = r.height;
-                                canvas.width = Math.round(cssW * dpr);
-                                canvas.height = Math.round(cssH * dpr);
-                                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                                ctx.globalCompositeOperation = 'source-over';
-                                ctx.clearRect(0, 0, cssW, cssH);
-                                if (img.complete && img.naturalWidth) {
-                                    ctx.drawImage(img, 0, 0, cssW, cssH);
-                                } else {
-                                    ctx.fillStyle = '#efe6d5';
-                                    ctx.fillRect(0, 0, cssW, cssH);
-                                }
-                            }
-
-                            img.onload = paint;
-                            img.onerror = paint;
-                            paint();
-
-                            var rt;
-                            window.addEventListener('resize', function() {
-                                if (revealed || started) return;
-                                clearTimeout(rt);
-                                rt = setTimeout(paint, 200);
-                            });
-
-                            function point(e) {
-                                var r = canvas.getBoundingClientRect();
-                                var p = (e.touches && e.touches[0]) ? e.touches[0] : e;
-                                return { x: p.clientX - r.left, y: p.clientY - r.top };
-                            }
-
-                            function carve(p) {
-                                ctx.globalCompositeOperation = 'destination-out';
-                                ctx.lineWidth = BRUSH * 2;
-                                ctx.lineCap = 'round';
-                                ctx.lineJoin = 'round';
-                                if (last) {
-                                    ctx.beginPath();
-                                    ctx.moveTo(last.x, last.y);
-                                    ctx.lineTo(p.x, p.y);
-                                    ctx.stroke();
-                                }
-                                ctx.beginPath();
-                                ctx.arc(p.x, p.y, BRUSH, 0, Math.PI * 2);
-                                ctx.fill();
-                                last = p;
-                            }
-
-                            function cleared() {
-                                try {
-                                    var d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-                                    var total = 0, gone = 0;
-                                    for (var i = 3; i < d.length; i += 64) {
-                                        total++;
-                                        if (d[i] < 40) gone++;
-                                    }
-                                    return total ? gone / total : 0;
-                                } catch (err) {
-                                    return 0;
-                                }
-                            }
-
-                            function begin(e) {
-                                if (revealed) return;
-                                drawing = true;
-                                last = null;
-                                if (!started) {
-                                    started = true;
-                                    section.classList.add('ss-started');
-                                }
-                                carve(point(e));
-                            }
-
-                            function move(e) {
-                                if (!drawing || revealed) return;
-                                if (e.cancelable) e.preventDefault();
-                                carve(point(e));
-                                var now = Date.now();
-                                if (now - checkAt > 220) {
-                                    checkAt = now;
-                                    if (cleared() >= THRESHOLD) reveal();
-                                }
-                            }
-
-                            function end() {
-                                if (!drawing) return;
-                                drawing = false;
-                                last = null;
-                                if (!revealed && cleared() >= THRESHOLD) reveal();
-                            }
-
-                            canvas.addEventListener('mousedown', begin);
-                            window.addEventListener('mousemove', move);
-                            window.addEventListener('mouseup', end);
-                            canvas.addEventListener('touchstart', begin, { passive: true });
-                            canvas.addEventListener('touchmove', move, { passive: false });
-                            window.addEventListener('touchend', end);
-                            window.addEventListener('touchcancel', end);
-
-                            setTimeout(function() {
-                                if (!revealed) section.classList.add('ss-offer-skip');
-                            }, 15000);
-                            btn.addEventListener('click', function() { reveal(); });
-
-                            function reveal() {
-                                if (revealed) return;
-                                revealed = true;
-                                started = true;
-                                section.classList.add('ss-started');
-                                section.classList.add('ss-revealed');
-                                try {
-                                    window.ssDateRevealed = true;
-                                    document.dispatchEvent(new CustomEvent('ss:date-revealed'));
-                                } catch (err) {}
-                                shower();
-                            }
-
-                            function shower() {
-                                if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-                                var count = window.innerWidth < 600 ? 26 : 40;
-                                for (var i = 0; i < count; i++) {
-                                    (function(i) {
-                                        setTimeout(function() {
-                                            var f = document.createElement('span');
-                                            f.textContent = '\u{1F33C}';
-                                            f.style.left = (Math.random() * 100) + '%';
-                                            f.style.fontSize = (14 + Math.random() * 20) + 'px';
-                                            f.style.opacity = 0;
-                                            f.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px');
-                                            f.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
-                                            var dur = 4.2 + Math.random() * 3.4;
-                                            f.style.animationDuration = dur + 's';
-                                            petals.appendChild(f);
-                                            setTimeout(function() {
-                                                if (f.parentNode) f.parentNode.removeChild(f);
-                                            }, dur * 1000 + 400);
-                                        }, i * 90);
-                                    })(i);
-                                }
-                            }
-                        })();
-        </script>
-
         <!-- ==================== COUNTDOWN (FINAL SECTION) ==================== -->
         <style>
             /* ---- countdown: hidden entirely until the date is revealed ---- */
@@ -1758,6 +1610,9 @@
                                 }
                             })();
         </script>
+
+        <!-- full-screen flower shower layer (fires once, on date reveal) -->
+        <div id="ssPetals" aria-hidden="true"></div>
 
     </body>
 </html>
