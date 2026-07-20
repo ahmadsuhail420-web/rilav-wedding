@@ -1645,11 +1645,12 @@
                                 }
 
                                 #ssScratchWrap .ss-sd-full {
-                                    font-family: 'Cormorant Garamond', Georgia, serif;
-                                    font-weight: 300;
-                                    font-size: 54px;
-                                    line-height: 1;
-                                    letter-spacing: 0.06em;
+                                    font-family: 'Marcellus', Georgia, serif;
+                                    font-weight: 400;
+                                    font-size: 42px;
+                                    line-height: 1.1;
+                                    letter-spacing: 0.14em;
+                                    text-indent: 0.14em;
                                     white-space: nowrap;
                                     color: #a67d2b;
                                     margin: 6px 0 2px;
@@ -1799,7 +1800,7 @@
                                     #ssSaveDate { padding: 44px 16px 54px; }
                                     #ssSaveDate .ss-sd-title { font-size: 27px; }
                                     #ssScratchWrap .ss-sd-num { font-size: 74px; }
-                                    #ssScratchWrap .ss-sd-full { font-size: 40px; }
+                                    #ssScratchWrap .ss-sd-full { font-size: 30px; letter-spacing: 0.12em; }
                                     #ssScratchWrap .ss-sd-month { font-size: 17px; }
                                     #ssFullDate .ss-fd-line { font-size: 18px; }
                                     #ssFullDate .ss-fd-sub { font-size: 21px; }
@@ -1957,6 +1958,10 @@
                                         started = true;
                                         section.classList.add('ss-started');
                                         section.classList.add('ss-revealed');
+                                        try {
+                                            window.ssDateRevealed = true;
+                                            document.dispatchEvent(new CustomEvent('ss:date-revealed'));
+                                        } catch (err) {}
                                         shower();
                                     }
 
@@ -2221,29 +2226,69 @@
                                                 background: transparent;
                                             }
 
+                                            /* ---- gate: countdown appears only after the date is revealed ---- */
+                                            #rec2339649013 {
+                                                opacity: 0;
+                                                visibility: hidden;
+                                                transition: opacity 1.4s ease, transform 1.4s cubic-bezier(0.22,0.61,0.36,1);
+                                                transform: translateY(18px);
+                                            }
+
+                                            #rec2339649013.ss-cd-live {
+                                                opacity: 1;
+                                                visibility: visible;
+                                                transform: translateY(0);
+                                            }
+
                                             #countdownContainer {
                                                 display: flex;
                                                 justify-content: center;
-                                                align-items: center;
-                                                gap: 6px;
-                                                margin: 80px 20px;
+                                                align-items: stretch;
+                                                gap: 0;
+                                                margin: 62px auto;
+                                                padding: 18px 10px 16px;
+                                                max-width: 520px;
+                                                border-top: 1px solid rgba(180,140,61,0.28);
+                                                border-bottom: 1px solid rgba(180,140,61,0.28);
+                                                position: relative;
                                             }
+
+                                            #countdownContainer::before,
+                                            #countdownContainer::after {
+                                                content: '';
+                                                position: absolute;
+                                                left: 50%;
+                                                width: 5px;
+                                                height: 5px;
+                                                margin-left: -2.5px;
+                                                transform: rotate(45deg);
+                                                background: #c8ab6d;
+                                                opacity: 0.9;
+                                            }
+
+                                            #countdownContainer::before { top: -3px; }
+                                            #countdownContainer::after  { bottom: -3px; }
 
                                             .time-block {
                                                 text-align: center;
+                                                flex: 1 1 0;
+                                                min-width: 0;
+                                                padding: 0 4px;
                                             }
 
                                             .number-wrap {
                                                 overflow: hidden;
-                                                height: 56px;
+                                                height: 54px;
                                                 display: flex;
                                                 align-items: center;
                                                 justify-content: center;
                                             }
 
                                             .number {
-                                                font-size: 45px;
-                                                font-family: 'Ovo',serif;
+                                                font-size: 42px;
+                                                font-family: 'Cormorant Garamond', 'Ovo', Georgia, serif;
+                                                font-weight: 300;
+                                                letter-spacing: 0.02em;
                                                 line-height: 1.2;
                                                 display: block;
                                                 white-space: nowrap;
@@ -2260,44 +2305,20 @@
                                                 animation: inkReveal 1.1s cubic-bezier(0.4,0,0.2,1) forwards,candleShimmer 4.5s ease-in-out 1.1s infinite;
                                             }
 
-                                            #tb-days.number.revealed {
-                                                animation-delay: 0s,1.1s;
-                                            }
-
-                                            #tb-hours .number.revealed {
-                                                animation-delay: 0.18s,1.28s;
-                                            }
-
-                                            #tb-mins.number.revealed {
-                                                animation-delay: 0.36s,1.46s;
-                                            }
-
-                                            #tb-secs.number.revealed {
-                                                animation-delay: 0.54s,1.64s;
-                                            }
+                                            #tb-days .number.revealed  { animation-delay: 0s,1.1s; }
+                                            #tb-hours .number.revealed { animation-delay: 0.18s,1.28s; }
+                                            #tb-mins .number.revealed  { animation-delay: 0.36s,1.46s; }
+                                            #tb-secs .number.revealed  { animation-delay: 0.54s,1.64s; }
 
                                             @keyframes inkReveal {
-                                                0% {
-                                                    clip-path: inset(0 100% 0 0);
-                                                }
-
-                                                100% {
-                                                    clip-path: inset(0 0% 0 0);
-                                                }
+                                                0%   { clip-path: inset(0 100% 0 0); }
+                                                100% { clip-path: inset(0 0% 0 0); }
                                             }
 
                                             @keyframes candleShimmer {
-                                                0% {
-                                                    background-position: 100% 0;
-                                                }
-
-                                                50% {
-                                                    background-position: 0% 0;
-                                                }
-
-                                                100% {
-                                                    background-position: 100% 0;
-                                                }
+                                                0%   { background-position: 100% 0; }
+                                                50%  { background-position: 0% 0; }
+                                                100% { background-position: 100% 0; }
                                             }
 
                                             .number.flip-out {
@@ -2312,60 +2333,51 @@
                                             }
 
                                             .label {
-                                                font-size: 19px;
-                                                margin-top: 8px;
+                                                font-size: 11px;
+                                                margin-top: 10px;
                                                 font-weight: 400;
-                                                color: #B48C3D;
-                                                font-family: 'Ovo',serif;
+                                                color: #8a6b4f;
+                                                font-family: 'Marcellus', Georgia, serif;
+                                                text-transform: uppercase;
+                                                letter-spacing: 0.24em;
+                                                text-indent: 0.24em;
                                                 opacity: 0;
                                                 transition: opacity 0.8s ease;
                                             }
 
-                                            .label.revealed {
-                                                opacity: 0.85;
-                                            }
+                                            .label.revealed { opacity: 0.9; }
 
-                                            #tb-days.label.revealed {
-                                                transition-delay: 0.9s;
-                                            }
+                                            #tb-days .label.revealed  { transition-delay: 0.9s; }
+                                            #tb-hours .label.revealed { transition-delay: 1.08s; }
+                                            #tb-mins .label.revealed  { transition-delay: 1.26s; }
+                                            #tb-secs .label.revealed  { transition-delay: 1.44s; }
 
-                                            #tb-hours .label.revealed {
-                                                transition-delay: 1.08s;
-                                            }
-
-                                            #tb-mins.label.revealed {
-                                                transition-delay: 1.26s;
-                                            }
-
-                                            #tb-secs.label.revealed {
-                                                transition-delay: 1.44s;
-                                            }
-
+                                            /* hairline dividers replace the colons */
                                             .separator {
-                                                font-size: 52px;
-                                                margin-top: -40px;
-                                                color: #B48C3D;
-                                                line-height: 1;
-                                                font-family: 'Ovo',serif;
+                                                flex: 0 0 1px;
+                                                width: 1px;
+                                                align-self: center;
+                                                height: 46px;
+                                                background: linear-gradient(to bottom, rgba(200,171,109,0) 0%, rgba(200,171,109,0.75) 50%, rgba(200,171,109,0) 100%);
+                                                margin-top: -8px;
                                                 opacity: 0;
                                                 transition: opacity 0.6s ease;
                                             }
 
-                                            .separator.revealed {
-                                                opacity: 0.9;
+                                            .separator.revealed { opacity: 1; }
+
+                                            .sep1.revealed { transition-delay: 0.25s; }
+                                            .sep2.revealed { transition-delay: 0.43s; }
+                                            .sep3.revealed { transition-delay: 0.61s; }
+
+                                            @media screen and (max-width: 479px) {
+                                                #countdownContainer { margin: 52px auto; padding: 14px 4px 12px; }
+                                                .number-wrap { height: 42px; }
+                                                .number { font-size: 32px; }
+                                                .label { font-size: 9px; letter-spacing: 0.16em; text-indent: 0.16em; margin-top: 8px; }
+                                                .separator { height: 36px; }
                                             }
 
-                                            .sep1.revealed {
-                                                transition-delay: 0.25s;
-                                            }
-
-                                            .sep2.revealed {
-                                                transition-delay: 0.43s;
-                                            }
-
-                                            .sep3.revealed {
-                                                transition-delay: 0.61s;
-                                            }
                                         </style>
                                     </head>
                                     <body>
@@ -2376,21 +2388,21 @@
                                                 </div>
                                                 <div class="label">Days</div>
                                             </div>
-                                            <div class="separator sep1">:</div>
+                                            <div class="separator sep1" aria-hidden="true"></div>
                                             <div class="time-block" id="tb-hours">
                                                 <div class="number-wrap">
                                                     <div class="number" id="hours">00</div>
                                                 </div>
                                                 <div class="label">Hours</div>
                                             </div>
-                                            <div class="separator sep2">:</div>
+                                            <div class="separator sep2" aria-hidden="true"></div>
                                             <div class="time-block" id="tb-mins">
                                                 <div class="number-wrap">
                                                     <div class="number" id="minutes">00</div>
                                                 </div>
                                                 <div class="label">Minutes</div>
                                             </div>
-                                            <div class="separator sep3">:</div>
+                                            <div class="separator sep3" aria-hidden="true"></div>
                                             <div class="time-block" id="tb-secs">
                                                 <div class="number-wrap">
                                                     <div class="number" id="seconds">00</div>
@@ -2468,21 +2480,54 @@
                                                         el.classList.add('revealed');
                                                     });
                                                 }
-                                                var observer = new IntersectionObserver(function(entries) {
-                                                    if (entries[0].isIntersecting) {
-                                                        doReveal();
-                                                        observer.disconnect();
-                                                    }
+                                                /* ---- only show once the scratch card date has been revealed ---- */
+                                                var rec = document.getElementById('rec2339649013');
+                                                var saveDate = document.getElementById('ssSaveDate');
+                                                var live = false;
+
+                                                function startWhenSeen() {
+                                                    var observer = new IntersectionObserver(function(entries) {
+                                                        if (entries[0].isIntersecting) {
+                                                            doReveal();
+                                                            observer.disconnect();
+                                                        }
+                                                    }, {
+                                                        threshold: 0.4
+                                                    });
+                                                    observer.observe(document.getElementById('countdownContainer'));
+                                                    setTimeout(function() {
+                                                        var r = document.getElementById('countdownContainer').getBoundingClientRect();
+                                                        if (r.top < window.innerHeight && r.bottom > 0)
+                                                            doReveal();
+                                                    }, 200);
                                                 }
-                                                ,{
-                                                    threshold: 0.4
-                                                });
-                                                observer.observe(document.getElementById('countdownContainer'));
-                                                setTimeout(function() {
-                                                    var r = document.getElementById('countdownContainer').getBoundingClientRect();
-                                                    if (r.top < window.innerHeight && r.bottom > 0)
-                                                        doReveal();
-                                                }, 200);
+
+                                                function goLive() {
+                                                    if (live) return;
+                                                    live = true;
+                                                    if (rec) rec.classList.add('ss-cd-live');
+                                                    startWhenSeen();
+                                                }
+
+                                                function dateIsOut() {
+                                                    if (window.ssDateRevealed) return true;
+                                                    return !!(saveDate && saveDate.classList.contains('ss-revealed'));
+                                                }
+
+                                                if (!saveDate && !window.ssDateRevealed) {
+                                                    /* no scratch card on the page - don't hold the countdown hostage */
+                                                    goLive();
+                                                } else if (dateIsOut()) {
+                                                    goLive();
+                                                } else {
+                                                    document.addEventListener('ss:date-revealed', goLive);
+                                                    var poll = setInterval(function() {
+                                                        if (dateIsOut()) {
+                                                            clearInterval(poll);
+                                                            goLive();
+                                                        }
+                                                    }, 400);
+                                                }
                                             }
                                             )();
                                         </script>
