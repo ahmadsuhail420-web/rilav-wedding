@@ -308,9 +308,9 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                justify-content: center;
+                justify-content: flex-start;
                 margin: -74px -20px 0;
-                padding: 74px 20px 34px;
+                padding: 58px 20px 34px;
                 overflow: hidden;
             }
 
@@ -333,15 +333,6 @@
                 display: block;
             }
 
-            /* soft cream wash so the typography stays legible over the footage */
-            #ssHero .ss-hero-video::after {
-                content: '';
-                position: absolute;
-                inset: 0;
-                background: linear-gradient(180deg, rgba(249,240,224,0.72) 0%, rgba(249,240,224,0.46) 38%, rgba(249,240,224,0.58) 72%, rgba(249,240,224,0.92) 100%);
-                pointer-events: none;
-            }
-
             #ssHero .ss-hero-kicker,
             #ssHero .ss-hero-names,
             #ssHero .ss-scroll-cue {
@@ -362,7 +353,7 @@
             }
 
             #ssHero .ss-hero-names {
-                margin-top: 44px;
+                margin-top: 26px;
             }
 
             #ssHero .ss-hero-name,
@@ -434,7 +425,8 @@
 
             /* ---- scroll cue ---- */
             #ssHero .ss-scroll-cue {
-                margin: 48px auto 0;
+                margin: auto auto 0;
+                padding-top: 48px;
             }
 
             #ssHero .ss-scroll-label {
@@ -557,8 +549,9 @@
 
             @media screen and (max-width: 639px) {
                 #ssHero { padding-top: 60px; }
-                #ssHero .ss-hero-stage { min-height: 88svh; margin: -60px -20px 0; padding: 60px 20px 26px; }
-                #ssHero .ss-scroll-cue { margin-top: 34px; }
+                #ssHero .ss-hero-stage { min-height: 88svh; margin: -60px -20px 0; padding: 44px 20px 26px; }
+                #ssHero .ss-hero-names { margin-top: 20px; }
+                #ssHero .ss-scroll-cue { padding-top: 34px; }
                 #ssHero .ss-hero-panel { margin-top: 34px; }
                 #ssHero .ss-hero-name { font-size: 52px; }
                 #ssHero .ss-hero-weds { font-size: 26px; margin: 20px 0 18px; }
