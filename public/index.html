@@ -1644,6 +1644,17 @@
                                     color: #6c513f;
                                 }
 
+                                #ssScratchWrap .ss-sd-full {
+                                    font-family: 'Cormorant Garamond', Georgia, serif;
+                                    font-weight: 300;
+                                    font-size: 54px;
+                                    line-height: 1;
+                                    letter-spacing: 0.06em;
+                                    white-space: nowrap;
+                                    color: #a67d2b;
+                                    margin: 6px 0 2px;
+                                }
+
                                 #ssScratchWrap .ss-sd-rule {
                                     width: 54px;
                                     height: 1px;
@@ -1700,7 +1711,12 @@
                                 }
 
                                 #ssSaveDate.ss-started #ssScratchHint,
-                                #ssSaveDate.ss-revealed #ssScratchHint { opacity: 0; }
+                                #ssSaveDate.ss-revealed #ssScratchHint {
+                                    opacity: 0;
+                                    visibility: hidden;
+                                    animation: none;
+                                    transition: none;
+                                }
 
                                 /* ---- full date, after reveal ---- */
                                 #ssFullDate {
@@ -1783,6 +1799,7 @@
                                     #ssSaveDate { padding: 44px 16px 54px; }
                                     #ssSaveDate .ss-sd-title { font-size: 27px; }
                                     #ssScratchWrap .ss-sd-num { font-size: 74px; }
+                                    #ssScratchWrap .ss-sd-full { font-size: 40px; }
                                     #ssScratchWrap .ss-sd-month { font-size: 17px; }
                                     #ssFullDate .ss-fd-line { font-size: 18px; }
                                     #ssFullDate .ss-fd-sub { font-size: 21px; }
@@ -1799,9 +1816,7 @@
                                 <h2 class="ss-sd-title">Save the Date</h2>
                                 <div id="ssScratchWrap">
                                     <div class="ss-sd-under">
-                                        <div class="ss-sd-day">Tuesday</div>
-                                        <div class="ss-sd-num">08</div>
-                                        <div class="ss-sd-month">December</div>
+                                        <div class="ss-sd-full">08 DEC 2026</div>
                                         <div class="ss-sd-rule"></div>
                                         <div class="ss-sd-time">Four in the afternoon</div>
                                     </div>
@@ -1809,11 +1824,6 @@
                                     <div id="ssScratchHint">Scratch to reveal</div>
                                 </div>
                                 <button type="button" id="ssRevealBtn">Reveal the date</button>
-                                <div id="ssFullDate">
-                                    <div class="ss-fd-line">Tuesday, the Eighth of December<br/>Two Thousand Twenty Six
-                                        <span class="ss-fd-sub">at four o'clock in the afternoon</span>
-                                    </div>
-                                </div>
                             </div>
                             <script>
                                 (function() {
@@ -1831,7 +1841,7 @@
                                     var last = null, checkAt = 0, cssW = 0, cssH = 0;
 
                                     var img = new Image();
-                                    img.src = '/image/scratch-card.webp';
+                                    img.src = '/image/scratch-card.png';
 
                                     function paint() {
                                         var r = wrap.getBoundingClientRect();
@@ -1944,6 +1954,8 @@
                                     function reveal() {
                                         if (revealed) return;
                                         revealed = true;
+                                        started = true;
+                                        section.classList.add('ss-started');
                                         section.classList.add('ss-revealed');
                                         shower();
                                     }
