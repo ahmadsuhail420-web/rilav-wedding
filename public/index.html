@@ -2064,7 +2064,7 @@
 
             #ssDress .ss-dc-head {
                 text-align: center;
-                margin: 0 0 clamp(24px, 4vw, 40px);
+                margin: 0 0 clamp(44px, 8vw, 78px);
                 padding: 0 20px;
             }
 
@@ -2120,7 +2120,7 @@
             /* ---- carousel stage ---- */
             #ssDcStage {
                 position: relative;
-                height: clamp(280px, 52vw, 470px);
+                height: clamp(330px, 62vw, 560px);
                 margin: 0 auto;
                 touch-action: pan-y;
                 cursor: grab;
@@ -2130,23 +2130,24 @@
 
             #ssDcStage.ss-dc-grabbing { cursor: grabbing; }
 
+            /* the browser stops panning the page as soon as the gesture reads horizontal */
+            #ssDcStage.ss-dc-lockx { touch-action: none; }
+
             #ssDcStage .ss-dc-card {
                 position: absolute;
                 top: 50%;
                 left: 50%;
-                width: clamp(190px, 34vw, 330px);
+                width: clamp(240px, 46vw, 430px);
                 height: 100%;
-                margin-left: calc(clamp(190px, 34vw, 330px) / -2);
+                margin-left: calc(clamp(240px, 46vw, 430px) / -2);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 will-change: transform, opacity, filter;
-                transition: transform 0.68s cubic-bezier(0.22,0.61,0.36,1),
-                            opacity 0.68s ease,
-                            filter 0.68s ease;
+                /* every frame is driven by script, so movement, scale, opacity,
+                   blur and the pop arc always share one clock */
+                transition: none;
             }
-
-            #ssDcStage.ss-dc-drag .ss-dc-card { transition: none; }
 
             #ssDcStage .ss-dc-card img {
                 display: block;
@@ -2158,18 +2159,15 @@
                 -webkit-user-drag: none;
             }
 
-            /* soft overlay that lifts off the centred card */
+            /* soft overlay that lifts off the centred card — synced via --veil */
             #ssDcStage .ss-dc-card::after {
                 content: '';
                 position: absolute;
                 inset: 0;
                 background: rgba(249,240,224,0.42);
-                opacity: 1;
-                transition: opacity 0.68s ease;
+                opacity: var(--veil, 1);
                 pointer-events: none;
             }
-
-            #ssDcStage .ss-dc-card.is-centre::after { opacity: 0; }
 
             #ssDcStage .ss-dc-card.is-centre {
                 z-index: 3;
@@ -2179,19 +2177,10 @@
             #ssDcStage .ss-dc-card.is-side { z-index: 2; }
             #ssDcStage .ss-dc-card.is-hidden { z-index: 1; opacity: 0; pointer-events: none; }
 
-            /* the pop-up as a card lands in the centre */
-            #ssDcStage .ss-dc-card.is-pop { animation: ssDcPop 0.72s cubic-bezier(0.34,1.3,0.64,1); }
-
-            @keyframes ssDcPop {
-                0%   { transform: translate(0, -46%) scale(0.96); }
-                55%  { transform: translate(0, -52%) scale(1.03); }
-                100% { transform: translate(0, -50%) scale(1); }
-            }
-
             /* ---- details under the stage ---- */
             #ssDcInfo {
                 max-width: 620px;
-                margin: clamp(14px, 2.6vw, 26px) auto 0;
+                margin: clamp(32px, 6vw, 56px) auto 0;
                 padding: 0 24px;
                 text-align: center;
                 transition: opacity 0.42s ease, transform 0.42s ease;
@@ -2300,8 +2289,6 @@
             }
 
             @media (prefers-reduced-motion: reduce) {
-                #ssDcStage .ss-dc-card { transition: opacity 0.25s ease; }
-                #ssDcStage .ss-dc-card.is-pop { animation: none; }
                 #ssDcInfo { transition: opacity 0.2s ease; }
             }
         </style>
@@ -2369,7 +2356,6 @@
                 var N = EVENTS.length;
                 var current = 0;          /* Mehendi centred first */
                 var cards = [];
-                var busy = null;
 
                 /* ---------- build ---------- */
                 EVENTS.forEach(function(ev, i) {
@@ -2403,38 +2389,73 @@
                 }
 
                 function step() {
-                    return Math.min(stage.getBoundingClientRect().width * 0.30, 250);
+                    return Math.min(stage.getBoundingClientRect().width * 0.27, 265);
                 }
 
-                /* ---------- render ---------- */
-                function layout(drag) {
+                var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                /* ---------- render: everything derives from one value, so it can't desync ---------- */
+                function layoutU(shift) {
                     var s = step();
-                    drag = drag || 0;
-                    var shift = drag / s;   /* in card-units, live during a drag */
 
                     cards.forEach(function(c, i) {
-                        var rel = offset(i) - shift;
+                        var rel = offset(i) + shift;   /* cards move WITH the finger */
                         var a = Math.abs(rel);
-                        var scale = Math.max(0.62, 1 - a * 0.20);
-                        var y = -50 + a * 5;                       /* side cards sit lower */
+                        var scale = Math.max(0.58, 1.12 - a * 0.30);   /* centre enlarged to 1.12 */
+                        var y = -50 + Math.min(a, 1.6) * 6.5;          /* pops down as it leaves */
                         var op = a > 1.85 ? 0 : Math.max(0, 1 - a * 0.42);
-                        var blur = Math.min(3.4, a * 2.6);
+                        var blur = Math.min(3.4, Math.max(0, a - 0.06) * 2.8);
 
-                        c.style.transform = 'translate(' + (rel * s) + 'px, ' + y + '%) scale(' + scale + ')';
-                        c.style.opacity = op;
-                        c.style.filter = a < 0.08 ? 'none' : 'blur(' + blur.toFixed(2) + 'px)';
+                        c.style.transform = 'translate3d(' + (rel * s).toFixed(2) + 'px, ' + y.toFixed(2) + '%, 0) scale(' + scale.toFixed(4) + ')';
+                        c.style.opacity = op.toFixed(3);
+                        c.style.filter = blur < 0.12 ? 'none' : 'blur(' + blur.toFixed(2) + 'px)';
+                        c.style.setProperty('--veil', Math.min(1, a * 1.15).toFixed(3));
+                        c.style.zIndex = String(10 - Math.round(a * 3));
 
-                        var centred = Math.round(offset(i)) === 0 && !drag;
-                        c.classList.toggle('is-centre', Math.abs(rel) < 0.5);
-                        c.classList.toggle('is-side', Math.abs(rel) >= 0.5 && Math.abs(rel) < 1.85);
-                        c.classList.toggle('is-hidden', Math.abs(rel) >= 1.85);
-                        c.setAttribute('aria-hidden', centred ? 'false' : 'true');
+                        c.classList.toggle('is-centre', a < 0.5);
+                        c.classList.toggle('is-side', a >= 0.5 && a < 1.85);
+                        c.classList.toggle('is-hidden', a >= 1.85);
+                        c.setAttribute('aria-hidden', (Math.round(offset(i)) === 0 && Math.abs(shift) < 0.02) ? 'false' : 'true');
                     });
 
                     Array.prototype.forEach.call(dots.children, function(d, i) {
                         d.classList.toggle('is-on', i === current);
                         d.setAttribute('aria-selected', i === current ? 'true' : 'false');
                     });
+                }
+
+                function layout(dragPx) {
+                    layoutU((dragPx || 0) / step());
+                }
+
+                /* ---------- the glide: eased shift -> 0 with a soft overshoot ----------
+                   The overshoot carries every property past centre and back together:
+                   the incoming card swells slightly beyond full size (pop UP) at the
+                   exact moment the outgoing card dips below its resting side scale
+                   (pop DOWN), then both settle. One curve, no separate animations. */
+                var raf = null;
+
+                function easeOutBack(t) {
+                    var k = 1.24;   /* gentle spring, ~4% overshoot */
+                    t = t - 1;
+                    return 1 + (k + 1) * t * t * t + k * t * t;
+                }
+
+                function glide(fromShift) {
+                    if (raf) cancelAnimationFrame(raf);
+                    if (reduceMotion) { layoutU(0); return; }
+                    var dist = Math.abs(fromShift);
+                    var dur = 420 + 240 * Math.min(dist, 1.3);   /* farther = a touch longer */
+                    var t0 = performance.now();
+
+                    function frame(now) {
+                        var t = Math.min(1, (now - t0) / dur);
+                        var e = easeOutBack(t);
+                        layoutU(fromShift * (1 - e));
+                        if (t < 1) raf = requestAnimationFrame(frame);
+                        else { raf = null; layoutU(0); }
+                    }
+                    raf = requestAnimationFrame(frame);
                 }
 
                 function paintInfo() {
@@ -2451,46 +2472,50 @@
                         '</div>';
                 }
 
-                function settle() {
-                    var centre = cards[current];
-                    centre.classList.remove('is-pop');
-                    void centre.offsetWidth;
-                    centre.classList.add('is-pop');
-                    clearTimeout(busy);
-                    busy = setTimeout(function() { centre.classList.remove('is-pop'); }, 780);
-                }
-
-                function commit() {
+                function swapInfo() {
                     info.classList.add('is-out');
                     setTimeout(function() {
                         paintInfo();
                         info.classList.remove('is-out');
-                    }, 300);
-                    layout();
-                    settle();
+                    }, 260);
                 }
 
-                /* circular — current always wraps, so there is no end to hit */
-                function go(dir) {
+                /* circular — current always wraps, so there is no end to hit.
+                   dragPx hands the glide the exact shift the finger left off at,
+                   so release -> settle is one continuous motion. */
+                function go(dir, dragPx) {
+                    var carried = (dragPx || 0) / step();
                     current = (current + dir + N * 8) % N;
-                    commit();
+                    swapInfo();
+                    /* offsets just shrank by dir, so the same on-screen frame is
+                       shift = carried + dir; glide carries it home to zero */
+                    glide(carried + dir);
                 }
 
                 function jump(i) {
                     if (i === current) return;
+                    var d = ((i - current + Math.floor(N / 2) + N * 8) % N) - Math.floor(N / 2);
                     current = i;
-                    commit();
+                    swapInfo();
+                    glide(d);   /* arrive from the side it was on */
                 }
 
                 /* ---------- drag / swipe ---------- */
-                var dragging = false, startX = 0, dx = 0, pid = null;
+                var dragging = false, startX = 0, startY = 0, dx = 0, pid = null;
+                var axis = null;      /* null = undecided, 'x' = ours, 'y' = the page scrolls */
+                var touching = false;
 
                 function down(e) {
                     if (e.button !== undefined && e.button !== 0) return;
+                    if (raf) { cancelAnimationFrame(raf); raf = null; layoutU(0); }
                     dragging = true;
+                    axis = null;
                     dx = 0;
-                    startX = (e.touches ? e.touches[0].clientX : e.clientX);
-                    stage.classList.add('ss-dc-drag', 'ss-dc-grabbing');
+                    var p = e.touches ? e.touches[0] : e;
+                    startX = p.clientX;
+                    startY = p.clientY;
+                    touching = (e.pointerType === 'touch') || !!e.touches;
+                    stage.classList.add('ss-dc-grabbing');
                     if (e.pointerId !== undefined) {
                         pid = e.pointerId;
                         try { stage.setPointerCapture(pid); } catch (err) {}
@@ -2499,26 +2524,58 @@
 
                 function movePtr(e) {
                     if (!dragging) return;
-                    var x = (e.touches ? e.touches[0].clientX : e.clientX);
-                    dx = x - startX;
-                    if (Math.abs(dx) > 6 && e.cancelable) e.preventDefault();
+                    var p = e.touches ? e.touches[0] : e;
+                    var mx = p.clientX - startX;
+                    var my = p.clientY - startY;
+
+                    /* first few pixels decide who owns the gesture */
+                    if (axis === null) {
+                        if (Math.abs(mx) < 8 && Math.abs(my) < 8) return;
+                        if (Math.abs(my) > Math.abs(mx)) {
+                            /* vertical intent — hand the gesture back to the page */
+                            axis = 'y';
+                            release();
+                            layout();
+                            return;
+                        }
+                        axis = 'x';
+                        stage.classList.add('ss-dc-drag', 'ss-dc-lockx');
+                    }
+
+                    if (axis !== 'x') return;
+                    dx = mx;
+                    if (e.cancelable) e.preventDefault();
                     layout(dx);
                 }
 
-                function up() {
-                    if (!dragging) return;
+                function release() {
                     dragging = false;
                     stage.classList.remove('ss-dc-drag', 'ss-dc-grabbing');
                     if (pid !== null) {
                         try { stage.releasePointerCapture(pid); } catch (err) {}
                         pid = null;
                     }
-                    var threshold = Math.min(step() * 0.32, 70);
-                    if (dx <= -threshold) go(1);
-                    else if (dx >= threshold) go(-1);
-                    else layout();
+                    /* give scrolling back once the finger is up */
+                    setTimeout(function() { stage.classList.remove('ss-dc-lockx'); }, 0);
+                }
+
+                function up() {
+                    if (!dragging) return;
+                    var wasX = (axis === 'x');
+                    release();
+                    if (!wasX) { axis = null; dx = 0; return; }
+                    var threshold = Math.min(step() * 0.28, 62);
+                    if (dx <= -threshold) go(1, dx);
+                    else if (dx >= threshold) go(-1, dx);
+                    else glide(dx / step());   /* not far enough — spring back */
+                    axis = null;
                     dx = 0;
                 }
+
+                /* pointermove can't cancel a scroll on its own — this can */
+                stage.addEventListener('touchmove', function(e) {
+                    if (dragging && axis === 'x' && e.cancelable) e.preventDefault();
+                }, { passive: false });
 
                 if (window.PointerEvent) {
                     stage.addEventListener('pointerdown', down);
@@ -2556,8 +2613,18 @@
                 window.addEventListener('resize', function() { layout(); });
 
                 paintInfo();
-                layout();
-                requestAnimationFrame(settle);
+                layoutU(0);
+                /* small entrance: Mehendi rises into place on first view */
+                if (!reduceMotion && 'IntersectionObserver' in window) {
+                    var seen = false;
+                    var io = new IntersectionObserver(function(entries) {
+                        if (seen || !entries[0].isIntersecting) return;
+                        seen = true;
+                        io.disconnect();
+                        glide(0.24);
+                    }, { threshold: 0.35 });
+                    io.observe(stage);
+                }
             })();
         </script>
 
