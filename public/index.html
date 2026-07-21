@@ -21,28 +21,7 @@
             html, body {
                 margin: 0;
                 padding: 0;
-                background: transparent;
-            }
-
-            /* ---- decorative paper texture: the very back layer of the page ---- */
-            #ssPaperBg {
-                position: fixed;
-                inset: 0;
-                z-index: -1;
-                pointer-events: none;
-                background-color: #f9f0e0;
-                background-image: url('/image/bg.webp');
-                background-size: cover;
-                background-position: center center;
-                background-repeat: no-repeat;
-            }
-
-            /* very tall or very wide viewports: tile rather than over-scale the grain */
-            @media (min-aspect-ratio: 2/1), (max-aspect-ratio: 1/2) {
-                #ssPaperBg {
-                    background-size: auto;
-                    background-repeat: repeat;
-                }
+                background: #f9f0e0;
             }
 
             body {
@@ -223,7 +202,7 @@
             #ssHero {
                 position: relative;
                 height: 1240px;
-                background-color: transparent;
+                background-color: #f9f0e0;
                 overflow: hidden;
             }
 
@@ -573,9 +552,6 @@
     </head>
     <body>
 
-        <!-- decorative paper texture, behind every section -->
-        <div id="ssPaperBg" aria-hidden="true"></div>
-
         <!-- ==================== WELCOME / ENVELOPE OVERLAY ==================== -->
         <audio id="weiAudio" loop>
             <source src="https://pub-4dc8201144ca418fb604349c73e8c724.r2.dev/Einaudi_%20Divenire%20(1)%20(1).mp3" type="audio/mp3">
@@ -806,7 +782,7 @@
         <!-- ==================== SAVE THE DATE (SCRATCH TO REVEAL) ==================== -->
         <style>
             #ssSaveDate {
-                            background: transparent;
+                            background: #f9f0e0;
                             padding: 56px 20px 68px;
                             text-align: center;
                             overflow: hidden;
@@ -1289,7 +1265,7 @@
             /* ---- countdown: hidden entirely until the date is revealed ---- */
                             #ssCountdown {
                                 display: none;
-                                background: transparent;
+                                background: #f9f0e0;
                                 padding: 62px 20px 70px;
                                 text-align: center;
                                 position: relative;
@@ -1626,7 +1602,7 @@
         <style>
             #ssEvents {
                 position: relative;
-                background: transparent;
+                background: #f9f0e0;
                 padding: 62px 20px 70px;
                 overflow: hidden;
             }
