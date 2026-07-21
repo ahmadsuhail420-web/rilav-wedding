@@ -1662,6 +1662,10 @@
             }
 
             /* ---- one event: illustration left, details right, at every width ---- */
+            #ssEvents .ss-ev-card + .ss-ev-card {
+                margin-top: clamp(38px, 7vw, 78px);
+            }
+
             #ssEvents .ss-ev-card {
                 display: flex;
                 flex-direction: row;
@@ -1678,6 +1682,10 @@
 
             #ssEvents .ss-ev-card.ss-in-view {
                 animation: ssEvIn 1.2s cubic-bezier(0.22,0.61,0.36,1) forwards;
+            }
+
+            #ssEvents .ss-ev-info {
+                max-width: 46%;
             }
 
             @keyframes ssEvIn {
@@ -1706,14 +1714,13 @@
 
             #ssEvents .ss-ev-name {
                 font-family: 'Marcellus', Georgia, serif;
-                font-size: clamp(22px, 6.2vw, 40px);
-                letter-spacing: 0.16em;
-                text-indent: 0.16em;
+                font-size: clamp(17px, 4.4vw, 33px);
+                letter-spacing: 0.13em;
+                text-indent: 0.13em;
                 text-transform: uppercase;
                 color: #a67d2b;
-                line-height: 1.2;
+                line-height: 1.25;
                 margin: 0;
-                white-space: nowrap;
             }
 
             #ssEvents .ss-ev-rule {
@@ -1727,23 +1734,91 @@
             #ssEvents .ss-ev-date {
                 font-family: 'Cormorant Garamond', Georgia, serif;
                 font-weight: 400;
-                font-size: clamp(15px, 4.1vw, 26px);
+                font-size: clamp(13px, 3.4vw, 23px);
                 letter-spacing: 0.03em;
                 color: #6c513f;
                 line-height: 1.35;
                 margin: 0;
-                white-space: nowrap;
             }
 
             #ssEvents .ss-ev-time {
                 font-family: 'Cormorant Garamond', Georgia, serif;
                 font-style: italic;
                 font-weight: 300;
-                font-size: clamp(14px, 3.7vw, 23px);
+                font-size: clamp(12px, 3.1vw, 21px);
                 color: #8a6b4f;
                 line-height: 1.35;
-                margin: 6px 0 0;
-                white-space: nowrap;
+                margin: 5px 0 0;
+            }
+
+            /* ---- venue ---- */
+            #ssEvents .ss-ev-venue-label {
+                font-family: 'Marcellus', Georgia, serif;
+                font-size: clamp(9px, 2.1vw, 12px);
+                letter-spacing: 0.22em;
+                text-indent: 0.22em;
+                text-transform: uppercase;
+                color: #b09263;
+                margin: clamp(12px, 2.6vw, 20px) 0 clamp(4px, 1vw, 7px);
+            }
+
+            #ssEvents .ss-ev-venue {
+                font-family: 'Cormorant Garamond', Georgia, serif;
+                font-weight: 400;
+                font-size: clamp(12px, 3.2vw, 21px);
+                color: #6c513f;
+                line-height: 1.4;
+                margin: 0;
+            }
+
+            #ssEvents .ss-ev-venue span {
+                display: block;
+                font-style: italic;
+                font-weight: 300;
+                font-size: 0.88em;
+                color: #8a6b4f;
+            }
+
+            #ssEvents .ss-ev-dir {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                margin-top: clamp(8px, 1.8vw, 14px);
+                font-family: 'Marcellus', Georgia, serif;
+                font-size: clamp(9px, 2.1vw, 12px);
+                letter-spacing: 0.18em;
+                text-indent: 0.18em;
+                text-transform: uppercase;
+                color: #a67d2b;
+                text-decoration: none;
+                border-bottom: 1px solid rgba(166,125,43,0.35);
+                padding-bottom: 3px;
+                transition: border-color 0.3s ease, color 0.3s ease;
+            }
+
+            #ssEvents .ss-ev-dir:hover {
+                color: #8a6b4f;
+                border-bottom-color: rgba(138,107,79,0.7);
+            }
+
+            #ssEvents .ss-ev-dir svg {
+                width: 1em;
+                height: 1em;
+                flex: 0 0 auto;
+                stroke: currentColor;
+                fill: none;
+                stroke-width: 1.4;
+                margin-left: -3px;
+            }
+
+            /* ---- flipped card: details left, illustration right ---- */
+            #ssEvents .ss-ev-card--flip {
+                flex-direction: row-reverse;
+            }
+
+            #ssEvents .ss-ev-card--flip .ss-ev-info {
+                margin-left: clamp(6px, 3.5vw, 56px);
+                margin-right: auto;
             }
 
             @media screen and (max-width: 639px) {
@@ -1756,8 +1831,10 @@
             @media screen and (max-width: 479px) {
                 #ssEvents { padding: 44px 14px 50px; }
                 #ssEvents .ss-ev-card { gap: 10px; padding: 0; }
-                #ssEvents .ss-ev-art { flex-basis: 54%; }
-                #ssEvents .ss-ev-name { letter-spacing: 0.08em; text-indent: 0.08em; }
+                #ssEvents .ss-ev-art { flex-basis: 48%; }
+                #ssEvents .ss-ev-info { max-width: 52%; }
+                #ssEvents .ss-ev-name { letter-spacing: 0.06em; text-indent: 0.06em; }
+                #ssEvents .ss-ev-dir { letter-spacing: 0.12em; text-indent: 0.12em; }
             }
 
             @media (prefers-reduced-motion: reduce) {
@@ -1777,10 +1854,34 @@
                     <img src="/image/mehendi.webp" alt="Mehendi ceremony illustration"/>
                 </div>
                 <div class="ss-ev-info">
-                    <h3 class="ss-ev-name">Mehendi</h3>
+                    <h3 class="ss-ev-name">Mehendi Ceremony</h3>
                     <div class="ss-ev-rule" aria-hidden="true"></div>
-                    <p class="ss-ev-date">05 December 2026</p>
+                    <p class="ss-ev-date">Saturday, 05 December 2026</p>
                     <p class="ss-ev-time">4:00 PM onwards</p>
+                    <p class="ss-ev-venue-label">Venue</p>
+                    <p class="ss-ev-venue">The Garden Courtyard<span>Emerald Convention Centre, Kochi</span></p>
+                    <a class="ss-ev-dir" href="https://www.google.com/maps/search/?api=1&amp;query=Emerald+Convention+Centre%2C+Kochi" target="_blank" rel="noopener">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+                        Get directions
+                    </a>
+                </div>
+            </div>
+
+            <div class="ss-ev-card ss-ev-card--flip">
+                <div class="ss-ev-art">
+                    <img src="/image/haldi.webp" alt="Haldi ceremony illustration"/>
+                </div>
+                <div class="ss-ev-info">
+                    <h3 class="ss-ev-name">Haldi Ceremony</h3>
+                    <div class="ss-ev-rule" aria-hidden="true"></div>
+                    <p class="ss-ev-date">Sunday, 06 December 2026</p>
+                    <p class="ss-ev-time">10:00 AM onwards</p>
+                    <p class="ss-ev-venue-label">Venue</p>
+                    <p class="ss-ev-venue">The Lotus Lawn<span>Emerald Convention Centre, Kochi</span></p>
+                    <a class="ss-ev-dir" href="https://www.google.com/maps/search/?api=1&amp;query=Emerald+Convention+Centre%2C+Kochi" target="_blank" rel="noopener">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+                        Get directions
+                    </a>
                 </div>
             </div>
         </section>
