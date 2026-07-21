@@ -1598,6 +1598,214 @@
                             }
                         })();
                     </script>
+        <!-- ==================== EVENTS ==================== -->
+        <style>
+            #ssEvents {
+                position: relative;
+                background-color: #f6ecda;
+                background-image: url('/image/paper2.webp');
+                background-size: cover;
+                background-position: center center;
+                background-repeat: no-repeat;
+                padding: 62px 20px 70px;
+                overflow: hidden;
+            }
+
+            #ssEvents .ss-ev-head {
+                text-align: center;
+                margin: 0 0 34px;
+            }
+
+            #ssEvents .ss-ev-l1 {
+                display: block;
+                font-family: 'Cormorant Garamond', Georgia, serif;
+                font-style: italic;
+                font-weight: 300;
+                font-size: 27px;
+                letter-spacing: 0.01em;
+                color: #8a6b4f;
+                margin-bottom: 8px;
+            }
+
+            #ssEvents .ss-ev-l2 {
+                display: block;
+                font-family: 'Marcellus', Georgia, serif;
+                font-size: 25px;
+                letter-spacing: 0.2em;
+                text-indent: 0.2em;
+                text-transform: uppercase;
+                color: #a67d2b;
+            }
+
+            #ssEvents .ss-ev-orn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                margin: 18px auto 0;
+                max-width: 180px;
+            }
+
+            #ssEvents .ss-ev-orn i {
+                display: block;
+                height: 1px;
+                flex: 1 1 auto;
+                background: linear-gradient(to right, rgba(200,171,109,0), rgba(200,171,109,0.8));
+            }
+
+            #ssEvents .ss-ev-orn i + i {
+                background: linear-gradient(to left, rgba(200,171,109,0), rgba(200,171,109,0.8));
+            }
+
+            #ssEvents .ss-ev-orn span {
+                width: 6px;
+                height: 6px;
+                transform: rotate(45deg);
+                background: #c8ab6d;
+                flex: 0 0 auto;
+            }
+
+            /* ---- one event: illustration left, details right, at every width ---- */
+            #ssEvents .ss-ev-card {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                align-items: center;
+                justify-content: center;
+                gap: clamp(14px, 4vw, 44px);
+                max-width: 860px;
+                margin: 0 auto;
+                opacity: 0;
+                transform: translateY(22px);
+            }
+
+            #ssEvents .ss-ev-card.ss-in-view {
+                animation: ssEvIn 1.2s cubic-bezier(0.22,0.61,0.36,1) forwards;
+            }
+
+            @keyframes ssEvIn {
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            #ssEvents .ss-ev-art {
+                flex: 0 1 clamp(140px, 42%, 360px);
+                min-width: 0;
+            }
+
+            #ssEvents .ss-ev-art img {
+                display: block;
+                width: 100%;
+                height: auto;
+                max-width: 100%;
+            }
+
+            #ssEvents .ss-ev-info {
+                flex: 1 1 auto;
+                min-width: 0;
+                text-align: left;
+            }
+
+            #ssEvents .ss-ev-name {
+                font-family: 'Marcellus', Georgia, serif;
+                font-size: clamp(22px, 6.2vw, 40px);
+                letter-spacing: 0.16em;
+                text-indent: 0.16em;
+                text-transform: uppercase;
+                color: #a67d2b;
+                line-height: 1.2;
+                margin: 0;
+                white-space: nowrap;
+            }
+
+            #ssEvents .ss-ev-rule {
+                width: clamp(34px, 9vw, 60px);
+                height: 1px;
+                background: #c8ab6d;
+                opacity: 0.8;
+                margin: clamp(10px, 2.4vw, 18px) 0 clamp(10px, 2.4vw, 16px);
+            }
+
+            #ssEvents .ss-ev-date {
+                font-family: 'Cormorant Garamond', Georgia, serif;
+                font-weight: 400;
+                font-size: clamp(15px, 4.1vw, 26px);
+                letter-spacing: 0.03em;
+                color: #6c513f;
+                line-height: 1.35;
+                margin: 0;
+                white-space: nowrap;
+            }
+
+            #ssEvents .ss-ev-time {
+                font-family: 'Cormorant Garamond', Georgia, serif;
+                font-style: italic;
+                font-weight: 300;
+                font-size: clamp(14px, 3.7vw, 23px);
+                color: #8a6b4f;
+                line-height: 1.35;
+                margin: 6px 0 0;
+                white-space: nowrap;
+            }
+
+            @media screen and (max-width: 639px) {
+                #ssEvents { padding: 50px 14px 56px; }
+                #ssEvents .ss-ev-l1 { font-size: 21px; margin-bottom: 6px; }
+                #ssEvents .ss-ev-l2 { font-size: 18px; letter-spacing: 0.16em; text-indent: 0.16em; }
+                #ssEvents .ss-ev-head { margin-bottom: 26px; }
+            }
+
+            @media screen and (max-width: 479px) {
+                #ssEvents { padding: 44px 12px 50px; }
+                #ssEvents .ss-ev-card { gap: 12px; }
+                #ssEvents .ss-ev-art { flex-basis: 40%; }
+                #ssEvents .ss-ev-name { letter-spacing: 0.1em; text-indent: 0.1em; }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                #ssEvents .ss-ev-card { opacity: 1; transform: none; }
+                #ssEvents .ss-ev-card.ss-in-view { animation: none; }
+            }
+        </style>
+        <section id="ssEvents">
+            <div class="ss-ev-head">
+                <span class="ss-ev-l1">You are invited to our</span>
+                <span class="ss-ev-l2">Celebrations</span>
+                <div class="ss-ev-orn" aria-hidden="true"><i></i><span></span><i></i></div>
+            </div>
+
+            <div class="ss-ev-card">
+                <div class="ss-ev-art">
+                    <img src="/image/mehendi.webp" alt="Mehendi ceremony illustration"/>
+                </div>
+                <div class="ss-ev-info">
+                    <h3 class="ss-ev-name">Mehendi</h3>
+                    <div class="ss-ev-rule" aria-hidden="true"></div>
+                    <p class="ss-ev-date">05 December 2026</p>
+                    <p class="ss-ev-time">4:00 PM onwards</p>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            (function() {
+                var cards = document.querySelectorAll('#ssEvents .ss-ev-card');
+                if (!cards.length) return;
+                if (!('IntersectionObserver' in window)) {
+                    Array.prototype.forEach.call(cards, function(el) { el.classList.add('ss-in-view'); });
+                    return;
+                }
+                var io = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('ss-in-view');
+                            io.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.2 });
+                Array.prototype.forEach.call(cards, function(el) { io.observe(el); });
+            })();
+        </script>
+
         <!-- full-screen flower shower layer (fires once, on date reveal) -->
         <div id="ssPetals" aria-hidden="true"></div>
 
