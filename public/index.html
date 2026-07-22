@@ -2714,6 +2714,345 @@
             })();
         </script>
 
+        <!-- ==================== RSVP ==================== -->
+        <style>
+            #ssRsvp {
+                position: relative;
+                background: #f9f0e0;
+                padding: 58px 16px 70px;
+                overflow: hidden;
+            }
+
+            /* the envelope IS the section's frame — everything lives on its paper */
+            #ssRsvp .ss-rs-env {
+                position: relative;
+                width: min(520px, 92vw);
+                /* one unit = 1% of the envelope's width, so every size inside
+                   scales with the artwork and nothing drifts off the paper */
+                --u: calc(min(520px, 92vw) / 100);
+                aspect-ratio: 941 / 1548;
+                margin: 0 auto;
+                background: url('/image/envelope.webp') center / contain no-repeat;
+            }
+
+            @supports not (aspect-ratio: 1 / 1) {
+                #ssRsvp .ss-rs-env { height: 0; padding-bottom: 164.5%; }
+            }
+
+            /* the writable area of the card, measured off the artwork */
+            #ssRsvp .ss-rs-sheet {
+                position: absolute;
+                left: 17%;
+                right: 17%;
+                top: 12.5%;
+                height: 52%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                text-align: center;
+            }
+
+            #ssRsvp .ss-rs-eyebrow {
+                font-family: 'Marcellus', Georgia, serif;
+                font-size: calc(var(--u) * 2.1);
+                letter-spacing: 0.3em;
+                text-indent: 0.3em;
+                text-transform: uppercase;
+                color: #b09263;
+                margin: 0 0 calc(var(--u) * 2.4);
+            }
+
+            #ssRsvp .ss-rs-title {
+                font-family: 'Cormorant Garamond', Georgia, serif;
+                font-weight: 300;
+                font-size: calc(var(--u) * 10);
+                letter-spacing: 0.08em;
+                text-indent: 0.08em;
+                line-height: 1;
+                color: #a67d2b;
+                margin: 0;
+            }
+
+            #ssRsvp .ss-rs-rule {
+                width: calc(var(--u) * 8);
+                height: 1px;
+                background: #c8ab6d;
+                opacity: 0.75;
+                margin: calc(var(--u) * 2.6) 0 calc(var(--u) * 2.4);
+            }
+
+            #ssRsvp .ss-rs-sub {
+                font-family: 'Cormorant Garamond', Georgia, serif;
+                font-style: italic;
+                font-weight: 300;
+                font-size: calc(var(--u) * 3.5);
+                line-height: 1.35;
+                color: #8a6b4f;
+                margin: 0 0 calc(var(--u) * 4);
+            }
+
+            /* ---- the form, ruled like a written card ---- */
+            #ssRsvpForm {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: calc(var(--u) * 3.2);
+            }
+
+            #ssRsvp .ss-rs-field {
+                position: relative;
+                text-align: left;
+            }
+
+            #ssRsvp .ss-rs-label {
+                display: block;
+                font-family: 'Marcellus', Georgia, serif;
+                font-size: calc(var(--u) * 1.9);
+                letter-spacing: 0.22em;
+                text-indent: 0.22em;
+                text-transform: uppercase;
+                color: #b09263;
+                margin-bottom: calc(var(--u) * 1);
+            }
+
+            #ssRsvp input,
+            #ssRsvp select {
+                width: 100%;
+                padding: calc(var(--u) * 0.8) 0;
+                background: transparent;
+                border: 0;
+                border-bottom: 1px solid rgba(166,125,43,0.35);
+                border-radius: 0;
+                font-family: 'Cormorant Garamond', Georgia, serif;
+                font-size: calc(var(--u) * 3.6);
+                color: #6c513f;
+                outline: none;
+                appearance: none;
+                -webkit-appearance: none;
+                transition: border-color 0.3s ease;
+            }
+
+            #ssRsvp input::placeholder { color: rgba(138,107,79,0.45); }
+
+            #ssRsvp input:focus,
+            #ssRsvp select:focus { border-bottom-color: rgba(166,125,43,0.85); }
+
+            #ssRsvp select {
+                background-image: linear-gradient(45deg, transparent 50%, #b09263 50%),
+                                  linear-gradient(135deg, #b09263 50%, transparent 50%);
+                background-position: right calc(var(--u) * 1.2) center, right calc(var(--u) * 0.4) center;
+                background-size: calc(var(--u) * 0.9) calc(var(--u) * 0.9), calc(var(--u) * 0.9) calc(var(--u) * 0.9);
+                background-repeat: no-repeat;
+                cursor: pointer;
+            }
+
+            /* attending: two quiet pills */
+            #ssRsvp .ss-rs-choice {
+                display: flex;
+                gap: calc(var(--u) * 2);
+            }
+
+            #ssRsvp .ss-rs-choice label {
+                flex: 1 1 0;
+                padding: calc(var(--u) * 1.6) 0;
+                border: 1px solid rgba(166,125,43,0.3);
+                border-radius: calc(var(--u) * 4);
+                font-family: 'Marcellus', Georgia, serif;
+                font-size: calc(var(--u) * 2.1);
+                letter-spacing: 0.16em;
+                text-indent: 0.16em;
+                text-transform: uppercase;
+                color: #8a6b4f;
+                text-align: center;
+                cursor: pointer;
+                transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+            }
+
+            #ssRsvp .ss-rs-choice input {
+                position: absolute;
+                opacity: 0;
+                pointer-events: none;
+                width: 0;
+                height: 0;
+            }
+
+            #ssRsvp .ss-rs-choice input:checked + label {
+                background: rgba(166,125,43,0.12);
+                border-color: rgba(166,125,43,0.75);
+                color: #a67d2b;
+            }
+
+            #ssRsvp .ss-rs-send {
+                margin-top: calc(var(--u) * 1);
+                padding: calc(var(--u) * 2) calc(var(--u) * 4);
+                background: transparent;
+                border: 1px solid rgba(166,125,43,0.5);
+                border-radius: calc(var(--u) * 5);
+                font-family: 'Marcellus', Georgia, serif;
+                font-size: calc(var(--u) * 2.2);
+                letter-spacing: 0.24em;
+                text-indent: 0.24em;
+                text-transform: uppercase;
+                color: #a67d2b;
+                cursor: pointer;
+                transition: background 0.35s ease, border-color 0.35s ease, color 0.35s ease;
+            }
+
+            #ssRsvp .ss-rs-send:hover {
+                background: rgba(166,125,43,0.1);
+                border-color: rgba(166,125,43,0.85);
+            }
+
+            /* ---- the thank-you that replaces the form ---- */
+            #ssRsvpDone {
+                display: none;
+                width: 100%;
+                animation: ssRsIn 0.9s cubic-bezier(0.22,0.61,0.36,1) both;
+            }
+
+            #ssRsvp.is-sent #ssRsvpForm { display: none; }
+            #ssRsvp.is-sent #ssRsvpDone { display: block; }
+
+            @keyframes ssRsIn {
+                from { opacity: 0; transform: translateY(12px); }
+                to   { opacity: 1; transform: translateY(0); }
+            }
+
+            #ssRsvpDone p {
+                font-family: 'Cormorant Garamond', Georgia, serif;
+                font-size: calc(var(--u) * 3.8);
+                line-height: 1.45;
+                color: #6c513f;
+                margin: 0;
+            }
+
+            #ssRsvpDone .ss-rs-sig {
+                display: block;
+                margin-top: calc(var(--u) * 2.4);
+                font-style: italic;
+                font-size: calc(var(--u) * 3.2);
+                color: #8a6b4f;
+            }
+
+            /* the whole card lifts in as it scrolls into view */
+            #ssRsvp .ss-rs-env {
+                opacity: 0;
+                transform: translateY(26px);
+            }
+
+            #ssRsvp.is-in .ss-rs-env {
+                animation: ssRsIn 1.3s cubic-bezier(0.22,0.61,0.36,1) forwards;
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                #ssRsvp .ss-rs-env { opacity: 1; transform: none; }
+                #ssRsvp.is-in .ss-rs-env { animation: none; }
+                #ssRsvpDone { animation: none; }
+            }
+        </style>
+        <section id="ssRsvp">
+            <div class="ss-rs-env">
+                <div class="ss-rs-sheet">
+                    <p class="ss-rs-eyebrow">Kindly reply</p>
+                    <h2 class="ss-rs-title">RSVP</h2>
+                    <div class="ss-rs-rule" aria-hidden="true"></div>
+                    <p class="ss-rs-sub">Please let us know by<br/>20 November 2026</p>
+
+                    <form id="ssRsvpForm" novalidate>
+                        <div class="ss-rs-field">
+                            <label class="ss-rs-label" for="ssRsName">Your name</label>
+                            <input type="text" id="ssRsName" name="name" placeholder="Name" autocomplete="name" required/>
+                        </div>
+
+                        <div class="ss-rs-field">
+                            <label class="ss-rs-label" for="ssRsGuests">Number of guests</label>
+                            <select id="ssRsGuests" name="guests">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6 or more</option>
+                            </select>
+                        </div>
+
+                        <div class="ss-rs-choice">
+                            <input type="radio" id="ssRsYes" name="attending" value="yes" checked/>
+                            <label for="ssRsYes">Joyfully accept</label>
+                            <input type="radio" id="ssRsNo" name="attending" value="no"/>
+                            <label for="ssRsNo">Regretfully decline</label>
+                        </div>
+
+                        <button type="submit" class="ss-rs-send">Send reply</button>
+                    </form>
+
+                    <div id="ssRsvpDone" aria-live="polite">
+                        <p>Thank you — your reply is noted.<span class="ss-rs-sig">We can't wait to celebrate with you.</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            (function() {
+                var section = document.getElementById('ssRsvp');
+                var form = document.getElementById('ssRsvpForm');
+                var done = document.getElementById('ssRsvpDone');
+                if (!section || !form) return;
+
+                /* card lifts in on scroll */
+                if ('IntersectionObserver' in window) {
+                    var io = new IntersectionObserver(function(entries) {
+                        if (!entries[0].isIntersecting) return;
+                        section.classList.add('is-in');
+                        io.disconnect();
+                    }, { threshold: 0.2 });
+                    io.observe(section);
+                } else {
+                    section.classList.add('is-in');
+                }
+
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    var name = form.querySelector('#ssRsName');
+                    if (!name.value.trim()) {
+                        name.focus();
+                        name.style.borderBottomColor = 'rgba(166,125,43,0.9)';
+                        return;
+                    }
+
+                    var reply = {
+                        name: name.value.trim(),
+                        guests: form.querySelector('#ssRsGuests').value,
+                        attending: (form.querySelector('input[name="attending"]:checked') || {}).value
+                    };
+
+                    /* ---------------------------------------------------------
+                       No backend wired up yet. Point ENDPOINT at a Google Apps
+                       Script / Formspree / Supabase URL and the reply posts there;
+                       until then it resolves locally and shows the thank-you.
+                       --------------------------------------------------------- */
+                    var ENDPOINT = '';
+
+                    var finish = function() {
+                        section.classList.add('is-sent');
+                        if (done) done.focus && done.focus();
+                    };
+
+                    if (ENDPOINT) {
+                        fetch(ENDPOINT, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(reply)
+                        }).then(finish).catch(finish);
+                    } else {
+                        finish();
+                    }
+                });
+            })();
+        </script>
+
         <!-- full-screen flower shower layer (fires once, on date reveal) -->
         <div id="ssPetals" aria-hidden="true"></div>
 
