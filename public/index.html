@@ -43,6 +43,41 @@
                 margin: 0;
             }
 
+            /* ---- event dates stay veiled until the Save-the-Date is scratched ---- */
+            .ss-date-gate {
+                display: inline;
+            }
+
+            /* before reveal: the real date is hidden, an elegant cue shown in its place */
+            .ss-date-gate .ss-date-real { display: none; }
+
+            .ss-date-gate .ss-date-veil {
+                display: inline;
+                font-style: italic;
+                letter-spacing: 0.06em;
+                color: #b0895a;
+                opacity: 0.9;
+            }
+
+            /* the quiet dash used on the time line */
+            .ss-date-gate .ss-date-veil:first-child { }
+
+            body.ss-dates-shown .ss-date-gate .ss-date-veil { display: none; }
+
+            body.ss-dates-shown .ss-date-gate .ss-date-real {
+                display: inline;
+                animation: ssGateReveal 0.9s cubic-bezier(0.22,0.61,0.36,1) both;
+            }
+
+            @keyframes ssGateReveal {
+                from { opacity: 0; filter: blur(3px); }
+                to   { opacity: 1; filter: blur(0); }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                body.ss-dates-shown .ss-date-gate .ss-date-real { animation: none; }
+            }
+
             /* ================================================================
                WELCOME / ENVELOPE OVERLAY   (was rec2408720493, T123)
                ================================================================ */
@@ -552,6 +587,25 @@
     </head>
     <body>
 
+        <script>
+            /* one switch for every hidden event date on the page — flips the moment
+               the Save-the-Date is scratched (or its reveal button is pressed) */
+            (function() {
+                function showDates() {
+                    document.body.classList.add('ss-dates-shown');
+                }
+                if (window.ssDateRevealed) {
+                    showDates();
+                } else {
+                    document.addEventListener('ss:date-revealed', showDates, { once: true });
+                    /* safety net in case the event fired before this listener bound */
+                    var poll = setInterval(function() {
+                        if (window.ssDateRevealed) { clearInterval(poll); showDates(); }
+                    }, 400);
+                }
+            })();
+        </script>
+
         <!-- ==================== WELCOME / ENVELOPE OVERLAY ==================== -->
         <audio id="weiAudio" loop>
             <source src="https://pub-4dc8201144ca418fb604349c73e8c724.r2.dev/Einaudi_%20Divenire%20(1)%20(1).mp3" type="audio/mp3">
@@ -882,7 +936,8 @@
                             height: 100%;
                             cursor: grab;
                             touch-action: none;
-                            transition: opacity 1.1s ease;
+                            transform-origin: center;
+                            transition: opacity 0.95s ease, transform 0.95s cubic-bezier(0.22,0.61,0.36,1), filter 0.95s ease;
                             border-radius: 2px;
                         }
 
@@ -890,6 +945,8 @@
 
                         #ssSaveDate.ss-revealed #ssScratchCanvas {
                             opacity: 0;
+                            transform: scale(1.04);
+                            filter: blur(2px);
                             pointer-events: none;
                         }
 
@@ -1116,7 +1173,7 @@
                         if (!section || !canvas) return;
 
                         var ctx = canvas.getContext('2d', { willReadFrequently: true });
-                        var THRESHOLD = 0.80;
+                        var THRESHOLD = 0.55;
                         var BRUSH = 30;
                         var revealed = false, started = false, drawing = false;
                         var last = null, checkAt = 0, cssW = 0, cssH = 0;
@@ -1178,9 +1235,17 @@
 
                         function cleared() {
                             try {
-                                var d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                                /* only sample the central region the date occupies, so the
+                                   reveal fires when the date itself is clear — not when the
+                                   whole card (including empty margins) has been scrubbed */
+                                var cw = canvas.width, ch = canvas.height;
+                                var x0 = Math.floor(cw * 0.16), x1 = Math.ceil(cw * 0.84);
+                                var y0 = Math.floor(ch * 0.20), y1 = Math.ceil(ch * 0.80);
+                                var bw = x1 - x0, bh = y1 - y0;
+                                if (bw <= 0 || bh <= 0) return 0;
+                                var d = ctx.getImageData(x0, y0, bw, bh).data;
                                 var total = 0, gone = 0;
-                                for (var i = 3; i < d.length; i += 64) {
+                                for (var i = 3; i < d.length; i += 40) {
                                     total++;
                                     if (d[i] < 40) gone++;
                                 }
@@ -1949,8 +2014,8 @@
                 <div class="ss-ev-info">
                     <h3 class="ss-ev-name">Mehendi Ceremony</h3>
                     <div class="ss-ev-rule" aria-hidden="true"></div>
-                    <p class="ss-ev-date">Saturday, 05 December 2026</p>
-                    <p class="ss-ev-time">4:00 PM onwards</p>
+                    <p class="ss-ev-date"><span class="ss-date-gate"><span class="ss-date-veil">Scratch to reveal</span><span class="ss-date-real">Saturday, 05 December 2026</span></span></p>
+                    <p class="ss-ev-time"><span class="ss-date-gate"><span class="ss-date-veil">— · —</span><span class="ss-date-real">4:00 PM onwards</span></span></p>
                     <p class="ss-ev-venue-label">Venue</p>
                     <p class="ss-ev-venue">The Garden Courtyard<span>Emerald Convention Centre, Kochi</span></p>
                     <a class="ss-ev-dir" href="https://www.google.com/maps/search/?api=1&amp;query=Emerald+Convention+Centre%2C+Kochi" target="_blank" rel="noopener">
@@ -1967,8 +2032,8 @@
                 <div class="ss-ev-info">
                     <h3 class="ss-ev-name">Haldi Ceremony</h3>
                     <div class="ss-ev-rule" aria-hidden="true"></div>
-                    <p class="ss-ev-date">Sunday, 06 December 2026</p>
-                    <p class="ss-ev-time">10:00 AM onwards</p>
+                    <p class="ss-ev-date"><span class="ss-date-gate"><span class="ss-date-veil">Scratch to reveal</span><span class="ss-date-real">Sunday, 06 December 2026</span></span></p>
+                    <p class="ss-ev-time"><span class="ss-date-gate"><span class="ss-date-veil">— · —</span><span class="ss-date-real">10:00 AM onwards</span></span></p>
                     <p class="ss-ev-venue-label">Venue</p>
                     <p class="ss-ev-venue">The Lotus Lawn<span>Emerald Convention Centre, Kochi</span></p>
                     <a class="ss-ev-dir" href="https://www.google.com/maps/search/?api=1&amp;query=Emerald+Convention+Centre%2C+Kochi" target="_blank" rel="noopener">
@@ -1985,8 +2050,8 @@
                 <div class="ss-ev-info">
                     <h3 class="ss-ev-name">Sangeet Night</h3>
                     <div class="ss-ev-rule" aria-hidden="true"></div>
-                    <p class="ss-ev-date">Monday, 07 December 2026</p>
-                    <p class="ss-ev-time">7:00 PM onwards</p>
+                    <p class="ss-ev-date"><span class="ss-date-gate"><span class="ss-date-veil">Scratch to reveal</span><span class="ss-date-real">Monday, 07 December 2026</span></span></p>
+                    <p class="ss-ev-time"><span class="ss-date-gate"><span class="ss-date-veil">— · —</span><span class="ss-date-real">7:00 PM onwards</span></span></p>
                     <p class="ss-ev-venue-label">Venue</p>
                     <p class="ss-ev-venue">The Grand Ballroom<span>Emerald Convention Centre, Kochi</span></p>
                     <a class="ss-ev-dir" href="https://www.google.com/maps/search/?api=1&amp;query=Emerald+Convention+Centre%2C+Kochi" target="_blank" rel="noopener">
@@ -2003,8 +2068,8 @@
                 <div class="ss-ev-info">
                     <h3 class="ss-ev-name">Wedding Ceremony</h3>
                     <div class="ss-ev-rule" aria-hidden="true"></div>
-                    <p class="ss-ev-date">Tuesday, 08 December 2026</p>
-                    <p class="ss-ev-time">Muhurat: 10:30 AM</p>
+                    <p class="ss-ev-date"><span class="ss-date-gate"><span class="ss-date-veil">Scratch to reveal</span><span class="ss-date-real">Tuesday, 08 December 2026</span></span></p>
+                    <p class="ss-ev-time"><span class="ss-date-gate"><span class="ss-date-veil">— · —</span><span class="ss-date-real">Muhurat: 10:30 AM</span></span></p>
                     <p class="ss-ev-venue-label">Venue</p>
                     <p class="ss-ev-venue">Sri Krishna Wedding Hall<span>Temple Road, Kochi</span></p>
                     <a class="ss-ev-dir" href="https://www.google.com/maps/search/?api=1&amp;query=Sri+Krishna+Wedding+Hall%2C+Temple+Road%2C+Kochi" target="_blank" rel="noopener">
@@ -2021,8 +2086,8 @@
                 <div class="ss-ev-info">
                     <h3 class="ss-ev-name">Wedding Reception</h3>
                     <div class="ss-ev-rule" aria-hidden="true"></div>
-                    <p class="ss-ev-date">Wednesday, 09 December 2026</p>
-                    <p class="ss-ev-time">6:30 PM onwards</p>
+                    <p class="ss-ev-date"><span class="ss-date-gate"><span class="ss-date-veil">Scratch to reveal</span><span class="ss-date-real">Wednesday, 09 December 2026</span></span></p>
+                    <p class="ss-ev-time"><span class="ss-date-gate"><span class="ss-date-veil">— · —</span><span class="ss-date-real">6:30 PM onwards</span></span></p>
                     <p class="ss-ev-venue-label">Venue</p>
                     <p class="ss-ev-venue">The Royal Pavilion<span>Emerald Convention Centre, Kochi</span></p>
                     <a class="ss-ev-dir" href="https://www.google.com/maps/search/?api=1&amp;query=Emerald+Convention+Centre%2C+Kochi" target="_blank" rel="noopener">
@@ -2759,7 +2824,7 @@
                 letter-spacing: 0.3em;
                 text-indent: 0.3em;
                 text-transform: uppercase;
-                color: #b09263;
+                color: #8a6a3c;
                 margin: 0 0 calc(var(--u) * 2.4);
             }
 
@@ -2770,7 +2835,7 @@
                 letter-spacing: 0.08em;
                 text-indent: 0.08em;
                 line-height: 1;
-                color: #a67d2b;
+                color: #7c4f1c;
                 margin: 0;
             }
 
@@ -2788,7 +2853,7 @@
                 font-weight: 300;
                 font-size: calc(var(--u) * 3.5);
                 line-height: 1.35;
-                color: #8a6b4f;
+                color: #6f513a;
                 margin: 0 0 calc(var(--u) * 4);
             }
 
@@ -2812,7 +2877,7 @@
                 letter-spacing: 0.22em;
                 text-indent: 0.22em;
                 text-transform: uppercase;
-                color: #b09263;
+                color: #8a6a3c;
                 margin-bottom: calc(var(--u) * 1);
             }
 
@@ -2825,14 +2890,14 @@
                 border-radius: 0;
                 font-family: 'Cormorant Garamond', Georgia, serif;
                 font-size: calc(var(--u) * 3.6);
-                color: #6c513f;
+                color: #5a4231;
                 outline: none;
                 appearance: none;
                 -webkit-appearance: none;
                 transition: border-color 0.3s ease;
             }
 
-            #ssRsvp input::placeholder { color: rgba(138,107,79,0.45); }
+            #ssRsvp input::placeholder { color: rgba(90,66,49,0.5); }
 
             #ssRsvp input:focus { border-bottom-color: rgba(166,125,43,0.85); }
 
@@ -2881,7 +2946,7 @@
                 font-family: 'Cormorant Garamond', Georgia, serif;
                 font-size: calc(var(--u) * 4);
                 line-height: 1;
-                color: #a67d2b;
+                color: #7c4f1c;
                 cursor: pointer;
                 transition: background 0.3s ease, border-color 0.3s ease, transform 0.15s ease, opacity 0.3s ease;
             }
@@ -2905,7 +2970,7 @@
                 font-family: 'Cormorant Garamond', Georgia, serif;
                 font-size: calc(var(--u) * 5.4);
                 line-height: 1;
-                color: #6c513f;
+                color: #5a4231;
             }
 
             /* attending: two quiet pills */
@@ -2924,7 +2989,7 @@
                 letter-spacing: 0.16em;
                 text-indent: 0.16em;
                 text-transform: uppercase;
-                color: #8a6b4f;
+                color: #6f513a;
                 text-align: center;
                 cursor: pointer;
                 transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
@@ -2941,7 +3006,7 @@
             #ssRsvp .ss-rs-choice input:checked + label {
                 background: rgba(166,125,43,0.12);
                 border-color: rgba(166,125,43,0.75);
-                color: #a67d2b;
+                color: #7c4f1c;
             }
 
             #ssRsvp .ss-rs-send {
@@ -2956,7 +3021,7 @@
                 letter-spacing: 0.24em;
                 text-indent: 0.24em;
                 text-transform: uppercase;
-                color: #a67d2b;
+                color: #7c4f1c;
                 cursor: pointer;
                 transition: background 0.35s ease, border-color 0.35s ease, color 0.35s ease;
             }
@@ -2985,7 +3050,7 @@
                 font-family: 'Cormorant Garamond', Georgia, serif;
                 font-size: calc(var(--u) * 3.8);
                 line-height: 1.45;
-                color: #6c513f;
+                color: #5a4231;
                 margin: 0;
             }
 
@@ -2994,7 +3059,7 @@
                 margin-top: calc(var(--u) * 2.4);
                 font-style: italic;
                 font-size: calc(var(--u) * 3.2);
-                color: #8a6b4f;
+                color: #6f513a;
             }
 
             /* the whole card lifts in as it scrolls into view */
@@ -3019,7 +3084,7 @@
                     <p class="ss-rs-eyebrow">Kindly reply</p>
                     <h2 class="ss-rs-title">RSVP</h2>
                     <div class="ss-rs-rule" aria-hidden="true"></div>
-                    <p class="ss-rs-sub">Please let us know by<br/>20 November 2026</p>
+                    <p class="ss-rs-sub">Please let us know by<br/><span class="ss-date-gate"><span class="ss-date-veil">the date on your card</span><span class="ss-date-real">20 November 2026</span></span></p>
 
                     <form id="ssRsvpForm" novalidate>
                         <div class="ss-rs-field">
