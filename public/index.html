@@ -2744,8 +2744,8 @@
                 position: absolute;
                 left: 17%;
                 right: 17%;
-                top: 12.5%;
-                height: 52%;
+                top: 19%;
+                height: 48%;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -2816,8 +2816,7 @@
                 margin-bottom: calc(var(--u) * 1);
             }
 
-            #ssRsvp input,
-            #ssRsvp select {
+            #ssRsvp input {
                 width: 100%;
                 padding: calc(var(--u) * 0.8) 0;
                 background: transparent;
@@ -2835,16 +2834,78 @@
 
             #ssRsvp input::placeholder { color: rgba(138,107,79,0.45); }
 
-            #ssRsvp input:focus,
-            #ssRsvp select:focus { border-bottom-color: rgba(166,125,43,0.85); }
+            #ssRsvp input:focus { border-bottom-color: rgba(166,125,43,0.85); }
 
-            #ssRsvp select {
-                background-image: linear-gradient(45deg, transparent 50%, #b09263 50%),
-                                  linear-gradient(135deg, #b09263 50%, transparent 50%);
-                background-position: right calc(var(--u) * 1.2) center, right calc(var(--u) * 0.4) center;
-                background-size: calc(var(--u) * 0.9) calc(var(--u) * 0.9), calc(var(--u) * 0.9) calc(var(--u) * 0.9);
-                background-repeat: no-repeat;
+            /* ---- guest count: hidden until "Joyfully accept" ---- */
+            #ssRsvp .ss-rs-guests {
+                overflow: hidden;
+                max-height: 0;
+                opacity: 0;
+                margin-top: calc(var(--u) * -3.2);   /* absorbs the flex gap while closed */
+                transform: translateY(calc(var(--u) * -1));
+                pointer-events: none;
+                transition: max-height 0.55s cubic-bezier(0.22,0.61,0.36,1),
+                            opacity 0.5s ease,
+                            transform 0.55s cubic-bezier(0.22,0.61,0.36,1),
+                            margin-top 0.55s cubic-bezier(0.22,0.61,0.36,1);
+            }
+
+            #ssRsvp .ss-rs-guests.is-open {
+                max-height: calc(var(--u) * 16);
+                opacity: 1;
+                margin-top: 0;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+
+            #ssRsvp .ss-rs-stepper {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: calc(var(--u) * 2);
+                border-bottom: 1px solid rgba(166,125,43,0.35);
+                padding: calc(var(--u) * 0.6) 0;
+            }
+
+            #ssRsvp .ss-rs-step {
+                width: calc(var(--u) * 7);
+                height: calc(var(--u) * 7);
+                flex: 0 0 auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+                background: transparent;
+                border: 1px solid rgba(166,125,43,0.4);
+                border-radius: 50%;
+                font-family: 'Cormorant Garamond', Georgia, serif;
+                font-size: calc(var(--u) * 4);
+                line-height: 1;
+                color: #a67d2b;
                 cursor: pointer;
+                transition: background 0.3s ease, border-color 0.3s ease, transform 0.15s ease, opacity 0.3s ease;
+            }
+
+            #ssRsvp .ss-rs-step:hover {
+                background: rgba(166,125,43,0.1);
+                border-color: rgba(166,125,43,0.75);
+            }
+
+            #ssRsvp .ss-rs-step:active { transform: scale(0.92); }
+
+            #ssRsvp .ss-rs-step[disabled] {
+                opacity: 0.3;
+                cursor: default;
+                pointer-events: none;
+            }
+
+            #ssRsvp .ss-rs-count {
+                flex: 1 1 auto;
+                text-align: center;
+                font-family: 'Cormorant Garamond', Georgia, serif;
+                font-size: calc(var(--u) * 5.4);
+                line-height: 1;
+                color: #6c513f;
             }
 
             /* attending: two quiet pills */
@@ -2884,8 +2945,9 @@
             }
 
             #ssRsvp .ss-rs-send {
-                margin-top: calc(var(--u) * 1);
-                padding: calc(var(--u) * 2) calc(var(--u) * 4);
+                align-self: center;
+                margin-top: calc(var(--u) * 1.5);
+                padding: calc(var(--u) * 1.7) calc(var(--u) * 6);
                 background: transparent;
                 border: 1px solid rgba(166,125,43,0.5);
                 border-radius: calc(var(--u) * 5);
@@ -2965,23 +3027,21 @@
                             <input type="text" id="ssRsName" name="name" placeholder="Name" autocomplete="name" required/>
                         </div>
 
-                        <div class="ss-rs-field">
-                            <label class="ss-rs-label" for="ssRsGuests">Number of guests</label>
-                            <select id="ssRsGuests" name="guests">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6 or more</option>
-                            </select>
-                        </div>
-
                         <div class="ss-rs-choice">
-                            <input type="radio" id="ssRsYes" name="attending" value="yes" checked/>
+                            <input type="radio" id="ssRsYes" name="attending" value="yes"/>
                             <label for="ssRsYes">Joyfully accept</label>
                             <input type="radio" id="ssRsNo" name="attending" value="no"/>
                             <label for="ssRsNo">Regretfully decline</label>
+                        </div>
+
+                        <div class="ss-rs-field ss-rs-guests" id="ssRsGuestField" aria-hidden="true">
+                            <label class="ss-rs-label">Number of guests</label>
+                            <div class="ss-rs-stepper">
+                                <button type="button" class="ss-rs-step" id="ssRsMinus" aria-label="One fewer guest">&minus;</button>
+                                <span class="ss-rs-count" id="ssRsCount" aria-live="polite">1</span>
+                                <button type="button" class="ss-rs-step" id="ssRsPlus" aria-label="One more guest">+</button>
+                            </div>
+                            <input type="hidden" id="ssRsGuests" name="guests" value="1"/>
                         </div>
 
                         <button type="submit" class="ss-rs-send">Send reply</button>
@@ -3013,19 +3073,61 @@
                     section.classList.add('is-in');
                 }
 
+                var guestField = form.querySelector('#ssRsGuestField');
+                var guestVal   = form.querySelector('#ssRsGuests');
+                var countEl    = form.querySelector('#ssRsCount');
+                var minusBtn   = form.querySelector('#ssRsMinus');
+                var plusBtn    = form.querySelector('#ssRsPlus');
+                var yesRadio   = form.querySelector('#ssRsYes');
+                var noRadio    = form.querySelector('#ssRsNo');
+                var MIN = 1, MAX = 10;
+
+                function flag(el) {
+                    el.focus();
+                    el.style.borderBottomColor = 'rgba(166,125,43,0.9)';
+                }
+
+                /* ---- guest-count stepper ---- */
+                function renderCount() {
+                    var n = parseInt(guestVal.value, 10) || MIN;
+                    countEl.textContent = n;
+                    minusBtn.disabled = n <= MIN;
+                    plusBtn.disabled = n >= MAX;
+                }
+                function bump(d) {
+                    var n = Math.min(MAX, Math.max(MIN, (parseInt(guestVal.value, 10) || MIN) + d));
+                    guestVal.value = n;
+                    renderCount();
+                }
+                minusBtn.addEventListener('click', function() { bump(-1); });
+                plusBtn.addEventListener('click', function() { bump(1); });
+                renderCount();
+
+                /* ---- reveal the count only when they accept ---- */
+                function syncGuests() {
+                    var accepting = yesRadio.checked;
+                    guestField.classList.toggle('is-open', accepting);
+                    guestField.setAttribute('aria-hidden', accepting ? 'false' : 'true');
+                }
+                yesRadio.addEventListener('change', syncGuests);
+                noRadio.addEventListener('change', syncGuests);
+
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
                     var name = form.querySelector('#ssRsName');
-                    if (!name.value.trim()) {
-                        name.focus();
-                        name.style.borderBottomColor = 'rgba(166,125,43,0.9)';
+                    if (!name.value.trim()) { flag(name); return; }
+                    var attendEl = form.querySelector('input[name="attending"]:checked');
+                    if (!attendEl) {
+                        var pill = form.querySelector('.ss-rs-choice label');
+                        if (pill) pill.style.borderColor = 'rgba(166,125,43,0.9)';
                         return;
                     }
 
+                    var accepting = attendEl.value === 'yes';
                     var reply = {
                         name: name.value.trim(),
-                        guests: form.querySelector('#ssRsGuests').value,
-                        attending: (form.querySelector('input[name="attending"]:checked') || {}).value
+                        attending: attendEl.value,
+                        guests: accepting ? guestVal.value : '0'
                     };
 
                     /* ---------------------------------------------------------
